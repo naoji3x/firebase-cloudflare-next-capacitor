@@ -5,14 +5,25 @@
   "repository": "https://github.com/naoji3x/firebase-cloudflare-next-capacitor.git",
   "author": "naoji3x <naoji.3x@gmail.com>",
   "license": "MIT",
-
   "scripts": {
+    "lint": "(cd web && yarn next lint)",
+    "lint:fix": "(cd web && yarn eslint src/**/*.{ts,tsx} --fix)",
+    "format": "(cd web && yarn prettier --write .)",
     "init:all": "yarn init:tf && yarn init:gc",
     "init:tf": "(cd terraform && terraform init)",
     "init:gc": "(cd terraform && gcloud init)",
     "auth:gc": "(cd terraform && gcloud auth application-default login)",
     "auth:logout": "(cd terraform && gcloud auth application-default revoke && gcloud auth revoke)",
     "tf:plan:dev": "(cd terraform && terraform plan -var-file=development.tfvars)",
-    "tf:apply:dev": "(cd terraform && terraform apply -var-file=development.tfvars)"
-  }
+    "tf:apply:dev": "(cd terraform && terraform apply -var-file=development.tfvars)",
+    "prepare": "husky"
+  },
+  "lint-staged": {
+    "*.{ts,tsx}": [
+      "yarn lint",
+      "yarn format",
+      "yarn lint:fix"
+    ]
+  },
+  "devDependencies": {}
 }

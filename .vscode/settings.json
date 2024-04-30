@@ -1,22 +1,24 @@
 {
+  "editor.formatOnSave": true,
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "typescript.preferences.importModuleSpecifier": "non-relative",
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": "explicit",
+    "source.formatAll.terraform": "explicit"
+  },
+
   "[terraform]": {
-    "editor.defaultFormatter": "hashicorp.terraform",
-    "editor.formatOnSave": true,
-    "editor.codeActionsOnSave": {
-      "source.formatAll.terraform": "explicit"
-    }
+    "editor.defaultFormatter": "hashicorp.terraform"
   },
   "[terraform-vars]": {
-    "editor.defaultFormatter": "hashicorp.terraform",
-    "editor.formatOnSave": true,
-    "editor.codeActionsOnSave": {
-      "source.formatAll.terraform": "explicit"
-    }
+    "editor.defaultFormatter": "hashicorp.terraform"
   },
   "cSpell.words": [
     "eamodio",
+    "esbenp",
     "gcloud",
     "joshuanianji",
+    "lefthook",
     "mhutchie",
     "tfvars"
   ]
