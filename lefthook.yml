@@ -7,5 +7,4 @@ pre-commit:
       run: yarn prettier {staged_files} --write
     lint-frontend:
       root: frontend
-      glob: "*.{js,jsx,ts,tsx,md,mdx,html,css,scss,json,yml}"
       run: yarn lint:fix
