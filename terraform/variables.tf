@@ -5,6 +5,7 @@ variable "billing_account" {
 
 variable "org_id" {
   description = "Google Cloud Organization ID for this Firebase project"
+  default     = null
   type        = string
 }
 

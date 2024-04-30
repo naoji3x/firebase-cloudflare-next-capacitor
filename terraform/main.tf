@@ -68,15 +68,21 @@ resource "google_firebase_web_app" "default" {
 
 # 各種モジュールに locals ファイルを渡す
 
+#
 # Firebase Authentication
-module "authentication" {
-  source                      = "./modules/authentication"
-  project_id                  = var.project_id
-  services_ready              = google_firebase_project.default
-  iap_brand_support_email     = var.iap_brand_support_email
-  iap_brand_application_title = var.iap_brand_application_title
-  iap_client_display_name     = var.iap_client_display_name
-}
+# Sign-in with Googleを有効化するスクリプトを検討したが、
+# Error: Error creating Brand: googleapi: Error 400: Support email is not allowed: xxxx@yyyy.com
+# Error: Error creating DefaultSupportedIdpConfig: googleapi: Error 403: Your application is authenticating by using local Application Default Credentials. The identitytoolkit.googleapis.com API requires a quota project, which is not set by default. To learn how to set your quota project, see https://cloud.google.com/docs/authentication/adc-troubleshooting/user-creds .
+# のエラーが出てしまい、対応できなかったため、手動で設定することにした。
+#
+# module "authentication" {
+#   source                      = "./modules/authentication"
+#   project_id                  = var.project_id
+#   services_ready              = google_firebase_project.default
+#   iap_brand_support_email     = var.iap_brand_support_email
+#   iap_brand_application_title = var.iap_brand_application_title
+#   iap_client_display_name     = var.iap_client_display_name
+# }
 
 # # Firebase Firestore
 module "firestore" {
