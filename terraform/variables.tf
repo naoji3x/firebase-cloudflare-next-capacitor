@@ -22,15 +22,18 @@ variable "project_id" {
 variable "iap_brand_support_email" {
   description = "Support email for the IAP brand"
   type        = string
+  default     = null
 }
 
 variable "iap_brand_application_title" {
   description = "Application title for the IAP brand"
   type        = string
+  default     = null
 }
 
 variable "iap_client_display_name" {
   description = "Display name for the IAP client"
   type        = string
+  default     = null
 }
 

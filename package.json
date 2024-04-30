@@ -11,6 +11,7 @@
     "init:tf": "(cd terraform && terraform init)",
     "init:gc": "(cd terraform && gcloud init)",
     "auth:gc": "(cd terraform && gcloud auth application-default login)",
+    "auth:logout": "(cd terraform && gcloud auth application-default revoke && gcloud auth revoke)",
     "tf:plan:dev": "(cd terraform && terraform plan -var-file=development.tfvars)",
     "tf:apply:dev": "(cd terraform && terraform apply -var-file=development.tfvars)"
   }
