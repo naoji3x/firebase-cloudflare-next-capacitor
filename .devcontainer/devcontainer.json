@@ -9,7 +9,8 @@
     "ghcr.io/dhoeric/features/google-cloud-cli:1": {},
 		"ghcr.io/joshuanianji/devcontainer-features/gcloud-cli-persistence:1": {},
     "ghcr.io/devcontainers-contrib/features/terraform-asdf:2": {},
-		"ghcr.io/joshuanianji/devcontainer-features/terraform-cli-persistence:1": {}
+		"ghcr.io/joshuanianji/devcontainer-features/terraform-cli-persistence:1": {},
+    "ghcr.io/joshuanianji/devcontainer-features/github-cli-persistence:1": {}
 	},
 
 	// Features to add to the dev container. More info: https://containers.dev/features.
