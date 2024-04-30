@@ -1,0 +1,17 @@
+{
+  "name": "firebase-cloudflare-next-capacitor",
+  "version": "0.1.0",
+  "description": "the template project using firebase, cloudflare, nextjs and capacitor",
+  "repository": "https://github.com/naoji3x/firebase-cloudflare-next-capacitor.git",
+  "author": "naoji3x <naoji.3x@gmail.com>",
+  "license": "MIT",
+
+  "scripts": {
+    "init:all": "yarn init:tf && yarn init:gc",
+    "init:tf": "(cd terraform && terraform init)",
+    "init:gc": "(cd terraform && gcloud init)",
+    "auth:gc": "(cd terraform && gcloud auth application-default login)",
+    "tf:plan:dev": "(cd terraform && terraform plan -var-file=development.tfvars)",
+    "tf:apply:dev": "(cd terraform && terraform apply -var-file=development.tfvars)"
+  }
+}
