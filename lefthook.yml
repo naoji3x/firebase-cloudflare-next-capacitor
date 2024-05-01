@@ -1,3 +1,9 @@
+pre-push:
+  commands:
+    packages-audit:
+      tags: frontend security
+      run: yarn audit
+
 pre-commit:
   parallel: true
   commands:
@@ -8,3 +14,9 @@ pre-commit:
     lint-frontend:
       root: frontend
       run: yarn lint:fix
+
+# Use this to validate commit messages
+commit-msg:
+  commands:
+    "lint commit message":
+      run: npx --no -- commitlint --edit "$1"
