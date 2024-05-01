@@ -17,13 +17,6 @@
     "tf:plan:dev": "(cd scripts/terraform && terraform plan -var-file=development.tfvars)",
     "tf:apply:dev": "(cd scripts/terraform && terraform apply -var-file=development.tfvars)"
   },
-  "lint-staged": {
-    "*.{ts,tsx}": [
-      "npm run lint",
-      "npm run format",
-      "npm run lint:fix"
-    ]
-  },
   "devDependencies": {
     "@commitlint/cli": "^19.3.0",
     "@commitlint/config-conventional": "^19.2.2"
