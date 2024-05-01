@@ -32,5 +32,9 @@
     "npm": ">=8.19.4",
     "yarn": "please-use-npm",
     "pnpm": "please-use-npm"
-  }
+  },
+  "private": "true",
+  "workspaces": [
+    "apps/*"
+  ]
 }
