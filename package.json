@@ -6,27 +6,31 @@
   "author": "naoji3x <naoji.3x@gmail.com>",
   "license": "MIT",
   "scripts": {
-    "lint": "(cd web && yarn next lint)",
-    "lint:fix": "(cd web && yarn eslint src/**/*.{ts,tsx} --fix)",
-    "format": "(cd web && yarn prettier --write .)",
-    "init:all": "yarn init:tf && yarn init:gc",
+    "lint": "(cd frontend && npm run lint)",
+    "lint:fix": "(cd frontend && npm run lint:fix)",
+    "format": "(cd frontend && npm run format)",
+    "init:all": "npm run init:tf && npm run init:gc",
     "init:tf": "(cd terraform && terraform init)",
     "init:gc": "(cd terraform && gcloud init)",
     "auth:gc": "(cd terraform && gcloud auth application-default login)",
     "auth:logout": "(cd terraform && gcloud auth application-default revoke && gcloud auth revoke)",
     "tf:plan:dev": "(cd terraform && terraform plan -var-file=development.tfvars)",
-    "tf:apply:dev": "(cd terraform && terraform apply -var-file=development.tfvars)",
-    "prepare": "lefthook uninstall && lefthook install"
+    "tf:apply:dev": "(cd terraform && terraform apply -var-file=development.tfvars)"
   },
   "lint-staged": {
     "*.{ts,tsx}": [
-      "yarn lint",
-      "yarn format",
-      "yarn lint:fix"
+      "npm run lint",
+      "npm run format",
+      "npm run lint:fix"
     ]
   },
   "devDependencies": {
     "@commitlint/cli": "^19.3.0",
     "@commitlint/config-conventional": "^19.2.2"
+  },
+  "engines": {
+    "npm": ">=8.19.4",
+    "yarn": "please-use-npm",
+    "pnpm": "please-use-npm"
   }
 }
