@@ -6,16 +6,16 @@
   "author": "naoji3x <naoji.3x@gmail.com>",
   "license": "MIT",
   "scripts": {
-    "lint": "(cd frontend && npm run lint)",
-    "lint:fix": "(cd frontend && npm run lint:fix)",
-    "format": "(cd frontend && npm run format)",
+    "lint": "(cd apps/frontend && npm run lint)",
+    "lint:fix": "(cd apps/frontend && npm run lint:fix)",
+    "format": "(cd apps/frontend && npm run format)",
     "init:all": "npm run init:tf && npm run init:gc",
-    "init:tf": "(cd terraform && terraform init)",
-    "init:gc": "(cd terraform && gcloud init)",
-    "auth:gc": "(cd terraform && gcloud auth application-default login)",
-    "auth:logout": "(cd terraform && gcloud auth application-default revoke && gcloud auth revoke)",
-    "tf:plan:dev": "(cd terraform && terraform plan -var-file=development.tfvars)",
-    "tf:apply:dev": "(cd terraform && terraform apply -var-file=development.tfvars)"
+    "init:tf": "(cd scripts/terraform && terraform init)",
+    "init:gc": "(cd scripts/terraform && gcloud init)",
+    "auth:gc": "(cd scripts/terraform && gcloud auth application-default login)",
+    "auth:logout": "(cd scripts/terraform && gcloud auth application-default revoke && gcloud auth revoke)",
+    "tf:plan:dev": "(cd scripts/terraform && terraform plan -var-file=development.tfvars)",
+    "tf:apply:dev": "(cd scripts/terraform && terraform apply -var-file=development.tfvars)"
   },
   "lint-staged": {
     "*.{ts,tsx}": [

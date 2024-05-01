@@ -29,15 +29,24 @@ call_lefthook()
   elif test -f "$dir/node_modules/@evilmartians/lefthook-installer/bin/lefthook_${osArch}_${cpuArch}/lefthook"
   then
     "$dir/node_modules/@evilmartians/lefthook-installer/bin/lefthook_${osArch}_${cpuArch}/lefthook" "$@"
-  elif test -f "$dir/frontend/node_modules/lefthook/bin/index.js"
+  elif test -f "$dir/apps/firebase/functions/src/node_modules/lefthook/bin/index.js"
   then
-    "$dir/frontend/node_modules/lefthook/bin/index.js" "$@"
-  elif test -f "$dir/frontend/node_modules/@evilmartians/lefthook/bin/lefthook_${osArch}_${cpuArch}/lefthook"
+    "$dir/apps/firebase/functions/src/node_modules/lefthook/bin/index.js" "$@"
+  elif test -f "$dir/apps/firebase/functions/src/node_modules/@evilmartians/lefthook/bin/lefthook_${osArch}_${cpuArch}/lefthook"
   then
-    "$dir/frontend/node_modules/@evilmartians/lefthook/bin/lefthook_${osArch}_${cpuArch}/lefthook" "$@"
-  elif test -f "$dir/frontend/node_modules/@evilmartians/lefthook-installer/bin/lefthook_${osArch}_${cpuArch}/lefthook"
+    "$dir/apps/firebase/functions/src/node_modules/@evilmartians/lefthook/bin/lefthook_${osArch}_${cpuArch}/lefthook" "$@"
+  elif test -f "$dir/apps/firebase/functions/src/node_modules/@evilmartians/lefthook-installer/bin/lefthook_${osArch}_${cpuArch}/lefthook"
   then
-    "$dir/frontend/node_modules/@evilmartians/lefthook-installer/bin/lefthook_${osArch}_${cpuArch}/lefthook" "$@"
+    "$dir/apps/firebase/functions/src/node_modules/@evilmartians/lefthook-installer/bin/lefthook_${osArch}_${cpuArch}/lefthook" "$@"
+  elif test -f "$dir/apps/frontend/node_modules/lefthook/bin/index.js"
+  then
+    "$dir/apps/frontend/node_modules/lefthook/bin/index.js" "$@"
+  elif test -f "$dir/apps/frontend/node_modules/@evilmartians/lefthook/bin/lefthook_${osArch}_${cpuArch}/lefthook"
+  then
+    "$dir/apps/frontend/node_modules/@evilmartians/lefthook/bin/lefthook_${osArch}_${cpuArch}/lefthook" "$@"
+  elif test -f "$dir/apps/frontend/node_modules/@evilmartians/lefthook-installer/bin/lefthook_${osArch}_${cpuArch}/lefthook"
+  then
+    "$dir/apps/frontend/node_modules/@evilmartians/lefthook-installer/bin/lefthook_${osArch}_${cpuArch}/lefthook" "$@"
   
   elif bundle exec lefthook -h >/dev/null 2>&1
   then

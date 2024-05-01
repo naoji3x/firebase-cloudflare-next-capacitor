@@ -2,18 +2,26 @@ pre-push:
   commands:
     packages-audit:
       tags: frontend security
-      run: yarn audit
+      run: npm audit
 
 pre-commit:
   parallel: true
   commands:
     format-frontend:
-      root: frontend
+      root: apps/frontend
       glob: "*.{js,jsx,ts,tsx,md,mdx,html,css,scss,json,yml}"
-      run: yarn prettier {staged_files} --write
+      run: npx prettier {staged_files} --write
     lint-frontend:
-      root: frontend
-      run: yarn lint:fix
+      root: apps/frontend
+      run: npm run lint:fix
+    format-functions:
+      root: apps/firebase/functions/src
+      glob: "*.{js,jsx,ts,tsx,md,mdx,html,css,scss,json,yml}"
+      run: npx prettier {staged_files} --write
+    lint-functions:
+      root: apps/firebase/functions/src
+      glob: "*.{js,jsx,ts,tsx,md,mdx,html,css,scss,json,yml}"
+      run: npx eslint {staged_files} --fix
 
 # Use this to validate commit messages
 commit-msg:
