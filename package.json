@@ -16,7 +16,7 @@
     "auth:logout": "(cd terraform && gcloud auth application-default revoke && gcloud auth revoke)",
     "tf:plan:dev": "(cd terraform && terraform plan -var-file=development.tfvars)",
     "tf:apply:dev": "(cd terraform && terraform apply -var-file=development.tfvars)",
-    "prepare": "husky"
+    "prepare": "lefthook uninstall && lefthook install"
   },
   "lint-staged": {
     "*.{ts,tsx}": [
