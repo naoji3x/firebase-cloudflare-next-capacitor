@@ -4,7 +4,8 @@
   "typescript.preferences.importModuleSpecifier": "non-relative",
   "editor.codeActionsOnSave": {
     "source.fixAll.eslint": "explicit",
-    "source.formatAll.terraform": "explicit"
+    "source.formatAll.terraform": "explicit",
+    "source.organizeImports": "explicit"
   },
 
   "[terraform]": {
@@ -14,11 +15,13 @@
     "editor.defaultFormatter": "hashicorp.terraform"
   },
   "cSpell.words": [
+    "clsx",
     "eamodio",
     "esbenp",
     "gcloud",
     "joshuanianji",
     "lefthook",
+    "lucide",
     "mhutchie",
     "tfvars"
   ]
