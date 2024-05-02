@@ -40,7 +40,8 @@
         "editorconfig.editorconfig",
         "streetsidesoftware.code-spell-checker",
         "esbenp.prettier-vscode",
-        "hashicorp.terraform"
+        "hashicorp.terraform",
+        "unifiedjs.vscode-mdx"
       ]
     }
   }

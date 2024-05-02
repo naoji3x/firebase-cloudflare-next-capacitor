@@ -1,7 +1,6 @@
 'use client'
 import { type Metadata } from 'next'
 
-import { GoogleSignIn } from '@/components/google-sign-in'
 import { Shell } from '@/components/shells/shell'
 import {
   Card,
@@ -11,6 +10,7 @@ import {
   CardTitle
 } from '@/components/ui/card'
 import { Checkbox } from '@/components/ui/checkbox'
+import { SignInButton } from '@/features/auth/components/sign-in-button'
 import { useState } from 'react'
 
 export const metadata: Metadata = {
@@ -50,7 +50,7 @@ const SocialSignIn = () => {
                   利用規約とプライバシーポリシーに同意しました。
                 </label>
               </div>
-              <GoogleSignIn disabled={!agreed} />
+              <SignInButton disabled={!agreed} />
             </CardContent>
           </Card>
         </Shell>

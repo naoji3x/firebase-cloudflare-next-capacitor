@@ -8,7 +8,7 @@ interface Props {
   disabled?: boolean
 }
 
-export const GoogleSignIn = ({ disabled = false }: Props) => {
+export const SignInButton = ({ disabled = false }: Props) => {
   const onClick = async () => {
     const res = await signIn('google')
   }
@@ -30,3 +30,5 @@ export const GoogleSignIn = ({ disabled = false }: Props) => {
     </Button>
   )
 }
+
+export default SignInButton

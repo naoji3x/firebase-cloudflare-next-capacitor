@@ -1,4 +1,4 @@
-import SessionProvider from '@/provider/session-provider'
+import SessionProvider from '@/features/auth/providers/session-provider'
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import './globals.css'

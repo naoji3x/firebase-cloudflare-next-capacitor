@@ -15,6 +15,7 @@
     "editor.defaultFormatter": "hashicorp.terraform"
   },
   "cSpell.words": [
+    "autodocs",
     "clsx",
     "eamodio",
     "esbenp",
@@ -23,6 +24,7 @@
     "lefthook",
     "lucide",
     "mhutchie",
-    "tfvars"
+    "tfvars",
+    "unifiedjs"
   ]
 }
