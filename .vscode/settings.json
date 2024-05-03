@@ -25,6 +25,7 @@
     "lucide",
     "mhutchie",
     "tfvars",
-    "unifiedjs"
+    "unifiedjs",
+    "postcss"
   ]
 }
