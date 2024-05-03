@@ -1,20 +1,22 @@
-'use client'
-
-import { Shell } from '@/components/shells/shell'
-import SignOutButton from '@/features/auth/components/sign-out-button'
+import { authOptions } from '@/pages/api/auth/[...nextauth]'
+import { getServerSession } from 'next-auth'
+import { redirect } from 'next/navigation'
 import SocialSignIn from './_components/social-sign-in'
 
-const Home = () => {
+const Index = async () => {
+  const session = await getServerSession(authOptions)
+  const user = session?.user
+  if (user) {
+    redirect('/home')
+  }
+
   return (
     <main>
       <div className="mx-auto max-w-4xl bg-white p-5">
         <SocialSignIn />
-        <Shell className="max-w-xs">
-          <SignOutButton />
-        </Shell>
       </div>
     </main>
   )
 }
 
-export default Home
+export default Index

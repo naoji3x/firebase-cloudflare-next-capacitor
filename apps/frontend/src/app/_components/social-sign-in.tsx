@@ -1,6 +1,7 @@
 'use client'
 import { type Metadata } from 'next'
 
+import GoogleSignInButton from '@/components/elements/google-sign-in-button'
 import { Shell } from '@/components/shells/shell'
 import {
   Card,
@@ -10,7 +11,7 @@ import {
   CardTitle
 } from '@/components/ui/card'
 import { Checkbox } from '@/components/ui/checkbox'
-import { SignInButton } from '@/features/auth/components/sign-in-button'
+import { signIn } from 'next-auth/react'
 import { useState } from 'react'
 
 export const metadata: Metadata = {
@@ -20,6 +21,7 @@ export const metadata: Metadata = {
 
 const SocialSignIn = () => {
   const [agreed, setAgreed] = useState(false)
+  const signInWithGoogle = async () => await signIn('google')
 
   return (
     <section className="pb-2 bg-white">
@@ -50,7 +52,10 @@ const SocialSignIn = () => {
                   利用規約とプライバシーポリシーに同意しました。
                 </label>
               </div>
-              <SignInButton disabled={!agreed} />
+              <GoogleSignInButton
+                disabled={!agreed}
+                onClick={async () => await signIn('google')}
+              />
             </CardContent>
           </Card>
         </Shell>

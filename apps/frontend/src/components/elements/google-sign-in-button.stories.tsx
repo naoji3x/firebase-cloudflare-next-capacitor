@@ -1,20 +1,26 @@
 import type { Meta, StoryObj } from '@storybook/react'
-import SignInButton from './sign-in-button'
+import GoogleSignInButton from './google-sign-in-button'
 
 const meta = {
-  title: 'features/auth/components/SignInButton',
-  component: SignInButton,
+  title: 'components/GoogleSignInButton',
+  component: GoogleSignInButton,
   parameters: {
     layout: 'centered'
   },
   tags: ['autodocs']
-} satisfies Meta<typeof SignInButton>
+} satisfies Meta<typeof GoogleSignInButton>
 
 export default meta
 type Story = StoryObj<typeof meta>
 
 export const Enabled: Story = {}
 
+export const DestructiveIcon: Story = {
+  args: {
+    variant: 'destructive',
+    size: 'icon'
+  }
+}
 export const Disabled: Story = {
   args: {
     disabled: true
