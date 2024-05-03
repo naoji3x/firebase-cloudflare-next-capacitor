@@ -19,7 +19,7 @@ pre-commit:
       glob: "*.{js,jsx,ts,tsx,md,mdx,html,css,scss,json,yml}"
       run: npx prettier {staged_files} --write
     lint-functions:
-      root: apps/firebase/functions/src
+      root: apps/firebase/functions
       glob: "*.{js,jsx,ts,tsx,md,mdx,html,css,scss,json,yml}"
       run: npx eslint {staged_files} --fix
 

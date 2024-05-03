@@ -14,7 +14,8 @@
     "ghcr.io/devcontainers-contrib/features/terraform-asdf:2": {},
     "ghcr.io/joshuanianji/devcontainer-features/terraform-cli-persistence:1": {},
     "ghcr.io/joshuanianji/devcontainer-features/github-cli-persistence:1": {},
-    "ghcr.io/devcontainers-contrib/features/lefthook-asdf:1": {}
+    "ghcr.io/devcontainers-contrib/features/lefthook-asdf:1": {},
+    "ghcr.io/devcontainers/features/java:1": {}
   },
 
   // Features to add to the dev container. More info: https://containers.dev/features.
@@ -44,7 +45,8 @@
         "streetsidesoftware.code-spell-checker",
         "esbenp.prettier-vscode",
         "hashicorp.terraform",
-        "unifiedjs.vscode-mdx"
+        "unifiedjs.vscode-mdx",
+        "chflick.firecode"
       ]
     }
   }

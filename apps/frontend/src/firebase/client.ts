@@ -1,7 +1,11 @@
 import { env } from '@/env.mjs'
 import { getApps, initializeApp } from 'firebase/app'
 import { getAuth } from 'firebase/auth'
-import { getFirestore, initializeFirestore } from 'firebase/firestore'
+import {
+  connectFirestoreEmulator,
+  getFirestore,
+  initializeFirestore
+} from 'firebase/firestore'
 import { connectFunctionsEmulator, getFunctions } from 'firebase/functions'
 
 export const firebaseConfig = {
@@ -23,7 +27,8 @@ const firebase = getApps()?.length
   : initializeApp(firebaseConfig)
 
 initializeFirestore(firebase, {
-  ignoreUndefinedProperties: true
+  ignoreUndefinedProperties: true,
+  experimentalForceLongPolling: isEmulator()
 })
 
 export const firebaseApp = firebase
@@ -34,4 +39,5 @@ export const firestore = getFirestore(firebaseApp)
 
 if (isEmulator()) {
   connectFunctionsEmulator(functions, 'localhost', 5001)
+  connectFirestoreEmulator(firestore, 'localhost', 8080)
 }
