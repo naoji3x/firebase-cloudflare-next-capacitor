@@ -103,13 +103,15 @@ const Home = () => {
           <Button onClick={addTodo}>保存</Button>
 
           <div>
-            {serverAuth
-              ? serverAuth.authId +
-                ',' +
-                serverAuth.name +
-                ',' +
-                serverAuth.email
-              : 'null'}
+            {serverAuth ? (
+              <>
+                <div>{serverAuth.authId}</div>
+                <div>name: {serverAuth.name}</div>
+                <div>email: {serverAuth.email}</div>
+              </>
+            ) : (
+              'no auth data'
+            )}
           </div>
 
           <div>

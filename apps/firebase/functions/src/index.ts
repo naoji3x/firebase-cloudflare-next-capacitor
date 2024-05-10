@@ -39,7 +39,7 @@ export const callHelloWorld = functions
 
 export const getAuth = functions
   .region(region)
-  .https.onCall((context: Context): Auth | null => {
+  .https.onCall((data, context: Context): Auth | null => {
     console.log('now getting auth ...')
     // logger.info('notify: ' + JSON.stringify(message))
     console.log(context?.auth)
