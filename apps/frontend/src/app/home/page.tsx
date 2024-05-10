@@ -5,8 +5,10 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { signOut } from '@/features/auth/lib/google-auth'
 import { useAuth } from '@/features/auth/providers/auth-provider'
-import { firestore } from '@/firebase/client'
+import { firestore, functions } from '@/firebase/client'
+import { Auth } from '@apps/firebase-functions/src/types/auth'
 import { addDoc, collection, onSnapshot } from 'firebase/firestore'
+import { httpsCallable } from 'firebase/functions'
 import { useEffect, useState } from 'react'
 
 type Todo = {
@@ -17,9 +19,16 @@ type Todo = {
   updatedAt: Date
 }
 
+const getAuth = async (): Promise<Auth | null> => {
+  const func = httpsCallable<void, Auth>(functions, 'getAuth')
+  const response = await func()
+  return response.data
+}
+
 const Home = () => {
   const [inputValue, setInputValue] = useState('')
   const [todos, setTodos] = useState<Todo[]>([])
+  const [serverAuth, setServerAuth] = useState<Auth | null>(null)
   const user = useAuth()
 
   const collectionName = `users/${user?.authId}/todos`
@@ -44,6 +53,14 @@ const Home = () => {
       console.error('Error adding document: ', e)
     }
   }
+
+  useEffect(() => {
+    const func = async () => {
+      console.log('calling getAuth')
+      setServerAuth(await getAuth())
+    }
+    func()
+  }, [])
 
   useEffect(() => {
     const col = collection(firestore, collectionName)
@@ -84,6 +101,16 @@ const Home = () => {
             onChange={(e) => setInputValue(e.target.value)}
           />
           <Button onClick={addTodo}>保存</Button>
+
+          <div>
+            {serverAuth
+              ? serverAuth.authId +
+                ',' +
+                serverAuth.name +
+                ',' +
+                serverAuth.email
+              : 'null'}
+          </div>
 
           <div>
             {todos.map((t) => (

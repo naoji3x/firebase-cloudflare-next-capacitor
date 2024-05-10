@@ -28,7 +28,9 @@
     "apps/firebase",
     "apps/firebase/functions"
   ],
-  "dependencies": {},
+  "dependencies": {
+    "@apps/firebase-functions": "*"
+  },
   "devDependencies": {
     "@commitlint/cli": "^19.3.0",
     "@commitlint/config-conventional": "^19.2.2",

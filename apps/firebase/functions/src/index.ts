@@ -7,9 +7,9 @@
  * See a full list of supported triggers at https://firebase.google.com/docs/functions
  */
 
+import { Auth } from '@/types/auth'
 import * as functions from 'firebase-functions'
 import * as logger from 'firebase-functions/logger'
-// import { env } from './env.mjs'
 
 // Start writing functions
 // https://firebase.google.com/docs/functions/typescript
@@ -18,6 +18,7 @@ import * as logger from 'firebase-functions/logger'
 // 関数の中では環境変数が使えるが、トップレベルでは使えない。
 const region = 'asia-northeast1'
 
+type Context = functions.https.CallableContext
 export const requestHelloWorld = functions
   .region(region)
   .https.onRequest((request, response) => {
@@ -25,8 +26,33 @@ export const requestHelloWorld = functions
     response.send('Hello from Firebase!')
   })
 
-export const callHelloWorld = functions.region(region).https.onCall(() => {
-  const message = 'Hello world!'
-  logger.info(region + ':' + message + ':' + new Date().toLocaleString())
-  return message
-})
+type Data = {
+  name: string
+}
+export const callHelloWorld = functions
+  .region(region)
+  .https.onCall((data: Data, context: Context) => {
+    const message = 'Hello from Firebase! ' + data.name + context?.auth?.uid
+    logger.info(region + ':' + message + ':' + new Date().toLocaleString())
+    return message
+  })
+
+export const getAuth = functions
+  .region(region)
+  .https.onCall((context: Context): Auth | null => {
+    console.log('now getting auth ...')
+    // logger.info('notify: ' + JSON.stringify(message))
+    console.log(context?.auth)
+    if (context?.auth) {
+      return {
+        authId: context.auth.uid,
+        name: context.auth.token.name,
+        email: context.auth.token.email
+      }
+    }
+    return {
+      authId: 'null',
+      name: 'null',
+      email: 'null'
+    }
+  })
