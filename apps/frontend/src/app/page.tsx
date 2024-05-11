@@ -1,3 +1,4 @@
+import AuthCheck from '@/app/_components/auth-check'
 import { authOptions } from '@/pages/api/auth/[...nextauth]'
 import { getServerSession } from 'next-auth'
 import { redirect } from 'next/navigation'
@@ -14,6 +15,7 @@ const Index = async () => {
     <main>
       <div className="mx-auto max-w-4xl bg-white p-5">
         <SocialSignIn />
+        <AuthCheck />
       </div>
     </main>
   )

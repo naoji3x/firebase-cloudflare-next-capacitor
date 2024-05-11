@@ -18,7 +18,8 @@
     "tf:apply:dev": "(cd scripts/terraform && terraform apply -var-file=development.tfvars)",
     "firebase:watch": "npm run build:watch -w apps/firebase/functions",
     "firebase:emulator": "npm run emulator -w apps/firebase",
-    "frontend:dev": "npm run dev -w apps/frontend"
+    "frontend:dev": "npm run dev -w apps/frontend",
+    "frontend:storybook": "npm run storybook -w apps/frontend"
   },
   "engines": {
     "npm": ">=8.19.4",

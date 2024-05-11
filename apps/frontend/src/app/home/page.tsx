@@ -7,24 +7,16 @@ import { signOut } from '@/features/auth/lib/google-auth'
 import { useAuth } from '@/features/auth/providers/auth-provider'
 import { firestore, functions } from '@/firebase/client'
 import { Auth } from '@apps/firebase-functions/src/types/auth'
-// import { Todo } from '@apps/firebase-functions/src/types/todo'
+import { Todo, todoSchema } from '@apps/firebase-functions/src/types/todo'
 import 'firebase/firestore'
 import { addDoc, collection, onSnapshot } from 'firebase/firestore'
 import { httpsCallable } from 'firebase/functions'
 import { useEffect, useState } from 'react'
 
 const getAuth = async (): Promise<Auth | null> => {
-  const func = httpsCallable<void, Auth>(functions, 'getAuth')
+  const func = httpsCallable<void, Auth | null>(functions, 'getAuth')
   const response = await func()
   return response.data
-}
-
-type Todo = {
-  uid: string
-  instruction: string
-  done: boolean
-  createdAt: Date
-  updatedAt: Date
 }
 
 const Home = () => {
@@ -40,10 +32,8 @@ const Home = () => {
     try {
       const todo: Omit<Todo, 'uid'> = {
         instruction: inputValue,
-        done: false,
-        // scheduledAt: new Date(),
-        createdAt: new Date(),
-        updatedAt: new Date()
+        scheduledAt: new Date(),
+        done: false
       }
 
       const docRef = await addDoc(collection(firestore, collectionName), todo)
@@ -64,16 +54,17 @@ const Home = () => {
   useEffect(() => {
     const col = collection(firestore, collectionName)
     const unsubscribe = onSnapshot(col, (snapshot) => {
-      const newTodos: Todo[] = snapshot.docs.map(
-        (doc) =>
-          ({
-            uid: doc.id,
-            instruction: doc.data().instruction,
-            // scheduledAt: doc.data().scheduledAt.toDate(),
-            createdAt: doc.data().createdAt.toDate(),
-            updatedAt: doc.data().updatedAt.toDate()
-          }) as Todo
-      )
+      const newTodos: Todo[] = snapshot.docs
+        .map((doc) => {
+          const parsedData = todoSchema.safeParse(doc.data())
+          if (!parsedData.success) {
+            console.error(parsedData.error)
+            return null
+          } else {
+            return parsedData.data
+          }
+        })
+        .filter((t): t is Todo => t !== null)
       setTodos(newTodos)
     })
     // コンポーネントがアンマウントされたときにリスナーを解除する
@@ -117,8 +108,8 @@ const Home = () => {
           <div>
             {todos.map((t) => (
               <div key={t.uid}>
-                {t.uid} : {t.instruction} : {t.done ? '完了' : '未完了'}:
-                {t.createdAt.toLocaleString()}
+                {t.instruction} : {t.done ? '完了' : '未完了'}:
+                {t.createdAt?.toLocaleString()}
               </div>
             ))}
           </div>
