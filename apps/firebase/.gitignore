@@ -69,3 +69,5 @@ node_modules/
 # .firebasercにはプロジェクト名が直接書かれているのでtemplateのリポジトリからは除外
 #　firebase.jsonはプロジェクト名以外の設定が書かれているのでtemplateのリポジトリに含める
 .firebaserc
+
+/emulator-data

@@ -22,7 +22,7 @@ const isEmulator = () => {
   return useEmulator ? useEmulator === 'true' : false
 }
 
-const firebase = getApps()?.length
+export const firebase = getApps()?.length
   ? getApps()[0]
   : initializeApp(firebaseConfig)
 
@@ -39,5 +39,5 @@ export const firestore = getFirestore(firebaseApp)
 
 if (isEmulator()) {
   connectFunctionsEmulator(functions, 'localhost', 5001)
-  connectFirestoreEmulator(firestore, 'localhost', 8080)
+  connectFirestoreEmulator(firestore, '127.0.0.1', 8080)
 }

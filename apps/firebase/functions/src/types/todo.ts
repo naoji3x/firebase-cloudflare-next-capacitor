@@ -2,8 +2,8 @@ import { z } from 'zod'
 
 // Todoのレスポンスボディの型
 export const todoJsonSchema = z.object({
-  id: z.string(),
-  title: z.string().nullable(),
+  uid: z.string(),
+  title: z.string().optional(),
   instruction: z.string(),
   done: z.boolean(),
   scheduledAt: z.string().datetime(),

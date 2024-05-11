@@ -1,5 +1,5 @@
 export type Auth = {
-  authId: string
+  uid: string
   name: string
   email?: string
 }

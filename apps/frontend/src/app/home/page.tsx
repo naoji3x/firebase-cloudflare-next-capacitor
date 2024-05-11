@@ -7,17 +7,11 @@ import { signOut } from '@/features/auth/lib/google-auth'
 import { useAuth } from '@/features/auth/providers/auth-provider'
 import { firestore, functions } from '@/firebase/client'
 import { Auth } from '@apps/firebase-functions/src/types/auth'
+// import { Todo } from '@apps/firebase-functions/src/types/todo'
+import 'firebase/firestore'
 import { addDoc, collection, onSnapshot } from 'firebase/firestore'
 import { httpsCallable } from 'firebase/functions'
 import { useEffect, useState } from 'react'
-
-type Todo = {
-  id: string
-  instruction: string
-  completed: boolean
-  createdAt: Date
-  updatedAt: Date
-}
 
 const getAuth = async (): Promise<Auth | null> => {
   const func = httpsCallable<void, Auth>(functions, 'getAuth')
@@ -25,24 +19,29 @@ const getAuth = async (): Promise<Auth | null> => {
   return response.data
 }
 
+type Todo = {
+  uid: string
+  instruction: string
+  done: boolean
+  createdAt: Date
+  updatedAt: Date
+}
+
 const Home = () => {
   const [inputValue, setInputValue] = useState('')
   const [todos, setTodos] = useState<Todo[]>([])
   const [serverAuth, setServerAuth] = useState<Auth | null>(null)
   const user = useAuth()
-
   const collectionName = `users/${user?.authId}/todos`
 
   const addTodo = async () => {
     if (inputValue === '') return
     if (!user) return
     try {
-      // const timestamp = serverTimestamp() as Timestamp
-      console.log(inputValue)
-
-      const todo: Omit<Todo, 'id'> = {
+      const todo: Omit<Todo, 'uid'> = {
         instruction: inputValue,
-        completed: false,
+        done: false,
+        // scheduledAt: new Date(),
         createdAt: new Date(),
         updatedAt: new Date()
       }
@@ -68,8 +67,9 @@ const Home = () => {
       const newTodos: Todo[] = snapshot.docs.map(
         (doc) =>
           ({
-            id: doc.id,
+            uid: doc.id,
             instruction: doc.data().instruction,
+            // scheduledAt: doc.data().scheduledAt.toDate(),
             createdAt: doc.data().createdAt.toDate(),
             updatedAt: doc.data().updatedAt.toDate()
           }) as Todo
@@ -105,7 +105,7 @@ const Home = () => {
           <div>
             {serverAuth ? (
               <>
-                <div>{serverAuth.authId}</div>
+                <div>{serverAuth.uid}</div>
                 <div>name: {serverAuth.name}</div>
                 <div>email: {serverAuth.email}</div>
               </>
@@ -116,8 +116,9 @@ const Home = () => {
 
           <div>
             {todos.map((t) => (
-              <div key={t.id}>
-                {t.id} : {t.instruction} : `{t.completed ? '完了' : '未完了'}`
+              <div key={t.uid}>
+                {t.uid} : {t.instruction} : {t.done ? '完了' : '未完了'}:
+                {t.createdAt.toLocaleString()}
               </div>
             ))}
           </div>
