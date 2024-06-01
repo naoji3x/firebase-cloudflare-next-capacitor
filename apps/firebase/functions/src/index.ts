@@ -61,14 +61,13 @@ export const createTodoTimestamp = onDocumentCreated(
 export const updateTodoTimestamp = onDocumentUpdated(
   '/users/{uid}/todos/{todoId}',
   (event) => {
-    const before = event.data?.before
-    const after = event.data?.after
-    if (!before || !after) return null
-    if (!before.data().updatedAt) return null
-    if (before.data().updatedAt.isEqual(after.data().updatedAt)) return null
+    const updatedAtBefore = event.data?.before?.data().updatedAt
+    if (!updatedAtBefore) return null
+    const updatedAtAfter = event.data?.after?.data().updatedAt
+    if (updatedAtBefore.isEqual(updatedAtAfter)) return null
 
     logger.info('now updating updatedAt ...', { structuredData: true })
-    return after.ref.set(
+    return event.data?.after.ref.set(
       {
         updatedAt: Timestamp.now()
       },
