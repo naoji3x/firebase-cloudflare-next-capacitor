@@ -1,3 +1,5 @@
+'use client'
+
 import { firestore, storage } from '@/firebase/client'
 import {
   Todo,
@@ -7,7 +9,7 @@ import {
 import { WithId } from '@apps/firebase-functions/src/types/utils'
 import 'firebase/firestore'
 import { addDoc, collection, onSnapshot } from 'firebase/firestore'
-import { ref, uploadBytes } from 'firebase/storage'
+import { getDownloadURL, ref, uploadBytes } from 'firebase/storage'
 import { useEffect, useState } from 'react'
 
 export const useTodos = (collectionName: string) => {
@@ -89,3 +91,6 @@ export const addTodo = async ({
   const docRef = await addDoc(collection(firestore, collectionName), todo)
   console.log('Document written with ID: ', docRef.id)
 }
+
+export const getImageUrl = async (image?: string) =>
+  image ? await getDownloadURL(ref(storage, image)) : ''

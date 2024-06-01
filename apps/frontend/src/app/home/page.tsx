@@ -1,5 +1,6 @@
 'use client'
 
+import TodoCard from '@/components/elements/todo-card'
 import { Shell } from '@/components/shells/shell'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -7,11 +8,32 @@ import { Label } from '@/components/ui/label'
 import { signOut } from '@/features/auth/lib/google-auth'
 import { useAuth } from '@/features/auth/providers/auth-provider'
 import { functions } from '@/firebase/client'
-import { addTodo, useTodos } from '@/hooks/todos'
+import { addTodo, getImageUrl, useTodos } from '@/hooks/todos'
 import { Auth } from '@apps/firebase-functions/src/types/auth'
+import { Todo } from '@apps/firebase-functions/src/types/todo'
+import { WithId } from '@apps/firebase-functions/src/types/utils'
 import 'firebase/firestore'
 import { httpsCallable } from 'firebase/functions'
 import { useEffect, useState } from 'react'
+
+const Card = ({ todo }: { todo: WithId<Todo> }) => {
+  const [imageUrl, setImageUrl] = useState<string>('')
+  useEffect(() => {
+    const func = async () => setImageUrl(await getImageUrl(todo.image))
+    func()
+  }, [todo.image])
+
+  return (
+    <TodoCard
+      title={todo.title}
+      instruction={todo.instruction}
+      scheduledAt={todo.scheduledAt}
+      createdAt={todo.createdAt}
+      updatedAt={todo.updatedAt}
+      imageUrl={imageUrl}
+    />
+  )
+}
 
 const getAuth = async (): Promise<Auth | null> => {
   const func = httpsCallable<void, Auth | null>(functions, 'getAuth')
@@ -96,12 +118,10 @@ const Home = () => {
               'no auth data'
             )}
           </div>
-
           <div>
             {todos.map((t) => (
               <div key={t.id}>
-                {t.instruction} : {t.done ? '完了' : '未完了'}:
-                {t.createdAt?.toLocaleString()}
+                <Card todo={t} />
               </div>
             ))}
           </div>
@@ -109,6 +129,15 @@ const Home = () => {
       </div>
     </main>
   )
+  /*
+          <div>
+            {todos.map((t) => (
+              <div key={t.id}>
+                <Card todo={t} />
+              </div>
+            ))}
+          </div>
+*/
 }
 
 export default Home
