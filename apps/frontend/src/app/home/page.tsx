@@ -7,7 +7,12 @@ import { signOut } from '@/features/auth/lib/google-auth'
 import { useAuth } from '@/features/auth/providers/auth-provider'
 import { firestore, functions } from '@/firebase/client'
 import { Auth } from '@apps/firebase-functions/src/types/auth'
-import { Todo, todoSchema } from '@apps/firebase-functions/src/types/todo'
+import {
+  Todo,
+  WithId,
+  firestoreToTodo,
+  todoFirestoreSchema
+} from '@apps/firebase-functions/src/types/todo'
 import 'firebase/firestore'
 import { addDoc, collection, onSnapshot } from 'firebase/firestore'
 import { httpsCallable } from 'firebase/functions'
@@ -21,7 +26,7 @@ const getAuth = async (): Promise<Auth | null> => {
 
 const Home = () => {
   const [inputValue, setInputValue] = useState('')
-  const [todos, setTodos] = useState<Todo[]>([])
+  const [todos, setTodos] = useState<WithId<Todo>[]>([])
   const [serverAuth, setServerAuth] = useState<Auth | null>(null)
   const user = useAuth()
   const collectionName = `users/${user?.authId}/todos`
@@ -30,7 +35,8 @@ const Home = () => {
     if (inputValue === '') return
     if (!user) return
     try {
-      const todo: Omit<Todo, 'uid'> = {
+      const todo: Todo = {
+        uid: user.authId,
         instruction: inputValue,
         scheduledAt: new Date(),
         done: false
@@ -54,17 +60,24 @@ const Home = () => {
   useEffect(() => {
     const col = collection(firestore, collectionName)
     const unsubscribe = onSnapshot(col, (snapshot) => {
-      const newTodos: Todo[] = snapshot.docs
+      const newTodos: WithId<Todo>[] = snapshot.docs
         .map((doc) => {
-          const parsedData = todoSchema.safeParse(doc.data())
+          const parsedData = todoFirestoreSchema.safeParse(doc.data())
           if (!parsedData.success) {
             console.error(parsedData.error)
             return null
           } else {
-            return parsedData.data
+            return {
+              id: doc.id,
+              ...firestoreToTodo(parsedData.data)
+            }
           }
         })
-        .filter((t): t is Todo => t !== null)
+        .filter((t): t is WithId<Todo> => t !== null)
+        .sort(
+          (lhs, rhs) => rhs.scheduledAt.getTime() - lhs.scheduledAt.getTime()
+        )
+
       setTodos(newTodos)
     })
     // コンポーネントがアンマウントされたときにリスナーを解除する
@@ -107,7 +120,7 @@ const Home = () => {
 
           <div>
             {todos.map((t) => (
-              <div key={t.uid}>
+              <div key={t.id}>
                 {t.instruction} : {t.done ? '完了' : '未完了'}:
                 {t.createdAt?.toLocaleString()}
               </div>

@@ -43,16 +43,15 @@ export const createTodoTimestamp = onDocumentCreated(
   '/users/{uid}/todos/{todoId}',
   (event) => {
     const snapshot = event.data
-    if (snapshot) {
-      console.log(snapshot)
-      snapshot.ref.set(
-        {
-          createdAt: Timestamp.now(),
-          updatedAt: Timestamp.now()
-        },
-        { merge: true }
-      )
-    }
+    if (!snapshot) return null
+    logger.info('now creating timestamps ...', { structuredData: true })
+    return snapshot.ref.set(
+      {
+        createdAt: Timestamp.now(),
+        updatedAt: Timestamp.now()
+      },
+      { merge: true }
+    )
   }
 )
 
@@ -62,15 +61,18 @@ export const createTodoTimestamp = onDocumentCreated(
 export const updateTodoTimestamp = onDocumentUpdated(
   '/users/{uid}/todos/{todoId}',
   (event) => {
-    const snapshot = event.data?.after
-    if (snapshot) {
-      console.log(snapshot)
-      snapshot.ref.set(
-        {
-          updatedAt: Timestamp.now()
-        },
-        { merge: true }
-      )
-    }
+    const before = event.data?.before
+    const after = event.data?.after
+    if (!before || !after) return null
+    if (!before.data().updatedAt) return null
+    if (before.data().updatedAt.isEqual(after.data().updatedAt)) return null
+
+    logger.info('now updating updatedAt ...', { structuredData: true })
+    return after.ref.set(
+      {
+        updatedAt: Timestamp.now()
+      },
+      { merge: true }
+    )
   }
 )

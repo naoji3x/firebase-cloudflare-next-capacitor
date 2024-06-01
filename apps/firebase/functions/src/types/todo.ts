@@ -1,4 +1,7 @@
+import { Timestamp } from 'firebase/firestore'
 import { z } from 'zod'
+
+export type WithId<T> = T & { id: string }
 
 const head = {
   uid: z.string(),
@@ -13,6 +16,12 @@ const jsonBody = {
   updatedAt: z.string().datetime().optional()
 }
 
+const firestoreBody = {
+  scheduledAt: z.instanceof(Timestamp),
+  createdAt: z.instanceof(Timestamp).optional(),
+  updatedAt: z.instanceof(Timestamp).optional()
+}
+
 const plainBody = {
   scheduledAt: z.date(),
   createdAt: z.date().optional(),
@@ -25,6 +34,12 @@ export const todoJsonSchema = z.object({
   ...jsonBody
 })
 
+// Todoのレスポンスボディの型
+export const todoFirestoreSchema = z.object({
+  ...head,
+  ...firestoreBody
+})
+
 // Todoのfirestoreの型
 export const todoSchema = z.object({
   ...head,
@@ -32,6 +47,7 @@ export const todoSchema = z.object({
 })
 
 export type TodoJson = z.infer<typeof todoJsonSchema>
+export type TodoFirestore = z.infer<typeof todoFirestoreSchema>
 export type Todo = z.infer<typeof todoSchema>
 
 // TodoJson -> Todoへの変換
@@ -40,6 +56,14 @@ export const jsonToTodo = (json: TodoJson): Todo => ({
   scheduledAt: new Date(Date.parse(json.scheduledAt)),
   createdAt: json.createdAt ? new Date(Date.parse(json.createdAt)) : undefined,
   updatedAt: json.updatedAt ? new Date(Date.parse(json.updatedAt)) : undefined
+})
+
+// TodoFirestore -> Todoへの変換
+export const firestoreToTodo = (firestore: TodoFirestore): Todo => ({
+  ...firestore,
+  scheduledAt: firestore.scheduledAt.toDate(),
+  createdAt: firestore.createdAt ? firestore.createdAt.toDate() : undefined,
+  updatedAt: firestore.updatedAt ? firestore.updatedAt.toDate() : undefined
 })
 
 // Todo -> TodoJsonへの変換

@@ -7,6 +7,7 @@ import {
   initializeFirestore
 } from 'firebase/firestore'
 import { connectFunctionsEmulator, getFunctions } from 'firebase/functions'
+import { getStorage } from 'firebase/storage'
 
 export const firebaseConfig = {
   apiKey: env.NEXT_PUBLIC_API_KEY,
@@ -36,6 +37,7 @@ export const firebaseApp = firebase
 export const auth = getAuth(firebaseApp)
 export const functions = getFunctions(firebaseApp, 'asia-northeast1')
 export const firestore = getFirestore(firebaseApp)
+export const storage = getStorage(firebaseApp)
 
 if (isEmulator()) {
   connectFunctionsEmulator(functions, 'localhost', 5001)
