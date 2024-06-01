@@ -1,13 +1,12 @@
 import { Timestamp } from 'firebase/firestore'
 import { z } from 'zod'
 
-export type WithId<T> = T & { id: string }
-
 const head = {
   uid: z.string(),
   title: z.string().optional(),
   instruction: z.string(),
-  done: z.boolean()
+  done: z.boolean(),
+  image: z.string().optional()
 }
 
 const jsonBody = {

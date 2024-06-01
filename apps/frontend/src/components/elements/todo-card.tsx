@@ -11,6 +11,7 @@ import { Label } from '@/components/ui/label'
 import { cn } from '@/lib/utils'
 import { format } from 'date-fns'
 import { ja } from 'date-fns/locale'
+import Image from 'next/image'
 
 const TodoCard = ({
   className = '',
@@ -19,6 +20,7 @@ const TodoCard = ({
   scheduledAt = new Date(),
   createdAt = new Date(),
   updatedAt = new Date(),
+  imageUrl = '',
   ...props
 }) => {
   return (
@@ -42,6 +44,15 @@ const TodoCard = ({
               {format(createdAt, 'yyyy/MM/dd HH:mm', { locale: ja })}
               <Label htmlFor="instruction">更新日</Label>
               {format(updatedAt, 'yyyy/MM/dd HH:mm', { locale: ja })}
+              {imageUrl && (
+                <Image
+                  src={imageUrl}
+                  alt="Todo"
+                  width={500}
+                  height={300}
+                  layout="responsive"
+                />
+              )}
             </div>
           </div>
         </form>
