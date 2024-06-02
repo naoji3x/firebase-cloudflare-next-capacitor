@@ -16,7 +16,7 @@ export const env = createEnv({
     NEXT_PUBLIC_STORAGE_BUCKET: z.string(),
     NEXT_PUBLIC_MESSAGING_SENDER_ID: z.string(),
     NEXT_PUBLIC_APP_ID: z.string(),
-    // NEXT_PUBLIC_VERSION: z.string(),
+    NEXT_PUBLIC_VAPID_KEY: z.string(),
     NEXT_PUBLIC_USE_FIREBASE_EMULATOR: z.string().optional()
   },
 
@@ -33,7 +33,7 @@ export const env = createEnv({
     NEXT_PUBLIC_MESSAGING_SENDER_ID:
       process.env.NEXT_PUBLIC_MESSAGING_SENDER_ID,
     NEXT_PUBLIC_APP_ID: process.env.NEXT_PUBLIC_APP_ID,
-    // NEXT_PUBLIC_VERSION: process.env.VERSION,
+    NEXT_PUBLIC_VAPID_KEY: process.env.NEXT_PUBLIC_VAPID_KEY,
     NEXT_PUBLIC_USE_FIREBASE_EMULATOR:
       process.env.NEXT_PUBLIC_USE_FIREBASE_EMULATOR
   }

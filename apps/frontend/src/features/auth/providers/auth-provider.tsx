@@ -37,7 +37,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     photoUrl: user.photoURL || ''
   })
 
-  // トークンを再取得する
   useEffect(() => {
     if (session) {
       if (auth.currentUser) {

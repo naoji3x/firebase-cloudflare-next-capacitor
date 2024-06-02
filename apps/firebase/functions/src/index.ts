@@ -20,7 +20,9 @@ import { setGlobalOptions } from 'firebase-functions/v2/options'
 
 // regionは固定値で設定する。環境変数から読み込もうとしたが、エラーになる。
 // 関数の中では環境変数が使えるが、トップレベルでは使えない。
-setGlobalOptions({ region: 'asia-northeast1' })
+
+const region = 'asia-northeast1'
+setGlobalOptions({ region })
 initializeApp()
 
 // Functionに渡された認証情報の取得

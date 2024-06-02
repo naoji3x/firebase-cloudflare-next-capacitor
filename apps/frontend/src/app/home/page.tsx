@@ -7,6 +7,7 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { signOut } from '@/features/auth/lib/google-auth'
 import { useAuth } from '@/features/auth/providers/auth-provider'
+import { useMessaging } from '@/features/messaging/providers/messaging-provider'
 import { functions } from '@/firebase/client'
 import { addTodo, getImageUrl, useTodos } from '@/hooks/todos'
 import { Auth } from '@apps/firebase-functions/src/types/auth'
@@ -43,6 +44,7 @@ const getAuth = async (): Promise<Auth | null> => {
 
 const Home = () => {
   const user = useAuth()
+  const messaging = useMessaging()
   const collectionName = `users/${user?.authId}/todos`
   const [file, setFile] = useState<File | undefined>(undefined)
   const [inputValue, setInputValue] = useState('')
@@ -119,8 +121,17 @@ const Home = () => {
             )}
           </div>
           <div>
+            {messaging ? (
+              <div className="max-w-sm break-words whitespace-pre-wrap">
+                token: {messaging.token}
+              </div>
+            ) : (
+              'no messaging data'
+            )}
+          </div>
+          <div>
             {todos.map((t) => (
-              <div key={t.id}>
+              <div key={t.id} className="mb-3">
                 <Card todo={t} />
               </div>
             ))}
@@ -129,15 +140,6 @@ const Home = () => {
       </div>
     </main>
   )
-  /*
-          <div>
-            {todos.map((t) => (
-              <div key={t.id}>
-                <Card todo={t} />
-              </div>
-            ))}
-          </div>
-*/
 }
 
 export default Home
