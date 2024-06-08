@@ -11,7 +11,7 @@ export const sendMessage = async ({
 }: {
   notification?: { title?: string; body?: string }
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  data: any
+  data?: any | null
   tokens: string[]
 }): Promise<BatchResponse> => {
   return await getMessaging().sendEachForMulticast({

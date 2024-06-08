@@ -1,8 +1,9 @@
 {
   "name": "firebase",
   "scripts": {
+    "list": "firebase projects:list",
     "emulator": "cd functions && npm run build && cd .. && firebase emulators:start --import=emulator-data --export-on-exit=emulator-data",
-    "deploy:rules": "firebase deploy --only firestore:rules"
+    "deploy:rules": "firebase deploy --only firestore:rules && firebase deploy --only storage"
   },
   "engines": {
     "node": "18"

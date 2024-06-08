@@ -9,7 +9,7 @@ const AuthCheck = () => {
   useEffect(() => {
     const func = async () => {
       setServerAuth(
-        (await httpsCallable<void, Auth | null>(functions, 'getAuth')()).data
+        (await httpsCallable<void, Auth | null>(functions, 'auth-get')()).data
       )
     }
     func()

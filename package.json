@@ -16,7 +16,9 @@
     "auth:logout": "(cd scripts/terraform && gcloud auth application-default revoke && gcloud auth revoke)",
     "tf:plan:dev": "(cd scripts/terraform && terraform plan -var-file=development.tfvars)",
     "tf:apply:dev": "(cd scripts/terraform && terraform apply -var-file=development.tfvars)",
-    "firebase:watch": "npm run build:watch -w apps/firebase/functions",
+    "functions:watch": "npm run build:watch -w apps/firebase/functions",
+    "functions:deploy": "npm run deploy -w apps/firebase/functions",
+    "firebase:list": "npm run list -w apps/firebase",
     "firebase:emulator": "npm run emulator -w apps/firebase",
     "frontend:dev": "npm run dev -w apps/frontend",
     "frontend:storybook": "npm run storybook -w apps/frontend"

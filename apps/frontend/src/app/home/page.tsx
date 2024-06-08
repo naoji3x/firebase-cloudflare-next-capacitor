@@ -9,8 +9,10 @@ import { signOut } from '@/features/auth/lib/google-auth'
 import { useAuth } from '@/features/auth/providers/auth-provider'
 import { useMessaging } from '@/features/messaging/providers/messaging-provider'
 import { functions } from '@/firebase/client'
+import { useMessage } from '@/hooks/message'
 import { addTodo, getImageUrl, useTodos } from '@/hooks/todos'
 import { Auth } from '@apps/firebase-functions/src/types/auth'
+import { Message } from '@apps/firebase-functions/src/types/message'
 import { Todo } from '@apps/firebase-functions/src/types/todo'
 import { WithId } from '@apps/firebase-functions/src/types/utils'
 import 'firebase/firestore'
@@ -37,14 +39,31 @@ const Card = ({ todo }: { todo: WithId<Todo> }) => {
 }
 
 const getAuth = async (): Promise<Auth | null> => {
-  const func = httpsCallable<void, Auth | null>(functions, 'getAuth')
-  const response = await func()
+  const response = await httpsCallable<void, Auth | null>(
+    functions,
+    'auth-get'
+  )()
   return response.data
+}
+
+const sendMessage = async (
+  title: string,
+  body: string,
+  token: string
+): Promise<void> => {
+  const func = httpsCallable<Message, void>(functions, 'message-send')
+  const message: Message = {
+    title,
+    body,
+    tokens: [token]
+  }
+  const response = await func(message)
 }
 
 const Home = () => {
   const user = useAuth()
   const messaging = useMessaging()
+  const { message } = useMessage()
   const collectionName = `users/${user?.authId}/todos`
   const [file, setFile] = useState<File | undefined>(undefined)
   const [inputValue, setInputValue] = useState('')
@@ -74,9 +93,24 @@ const Home = () => {
     }
   }
 
+  const handleSendMessage = async () => {
+    if (!messaging?.token) return
+    try {
+      console.log('sending message : ' + messaging.token)
+      await sendMessage('title', 'テストです。', messaging.token)
+    } catch (e) {
+      console.error('Error adding document: ', e)
+    }
+  }
+
   useEffect(() => {
     const func = async () => {
       console.log('calling getAuth')
+      const response = await httpsCallable<void, string>(
+        functions,
+        'hello-world-kebab'
+      )()
+      console.log('response', response)
       setServerAuth(await getAuth())
     }
     func()
@@ -108,8 +142,9 @@ const Home = () => {
             <Input id="picture" type="file" onChange={handleFileChange} />
           </div>
           <Button onClick={handleAddTodo}>保存</Button>
-
+          <Button onClick={handleSendMessage}>メッセージ</Button>
           <div>
+            <div>メッセージ: {message && message.notification?.body}</div>
             {serverAuth ? (
               <>
                 <div>{serverAuth.uid}</div>
