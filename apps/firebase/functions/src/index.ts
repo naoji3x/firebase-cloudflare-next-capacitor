@@ -9,12 +9,15 @@
 
 import { Auth } from '@/types/auth'
 import { Message } from '@/types/message'
+import { randomUUID } from 'crypto'
 import { initializeApp } from 'firebase-admin/app'
-import { Timestamp } from 'firebase-admin/firestore'
+import { Timestamp, getFirestore } from 'firebase-admin/firestore'
+import { TaskQueue } from 'firebase-admin/functions'
 import * as functions from 'firebase-functions'
 import * as logger from 'firebase-functions/logger'
 import {
   onDocumentCreated,
+  onDocumentDeleted,
   onDocumentUpdated
 } from 'firebase-functions/v2/firestore'
 import { onCall } from 'firebase-functions/v2/https'
@@ -32,8 +35,20 @@ const region = 'asia-northeast1'
 
 // v2のregionを設定
 setGlobalOptions({ region })
-// initializeApp({ credential: applicationDefault() })
 initializeApp()
+// エミュレータはtaskに対応していないため、エミュレーターの場合はログに出力する。
+if (process.env.FUNCTIONS_EMULATOR) {
+  Object.assign(TaskQueue.prototype, {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    enqueue: (data: any, params: any) =>
+      console.debug('enqueue tasks: ', data, params),
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    delete: (data: any) => console.debug('delete tasks: ', data)
+  })
+}
+
+const firestore = getFirestore()
+firestore.settings({ ignoreUndefinedProperties: true })
 
 // 以下の関数は、v1の関数のサンプル
 export const helloWorld = functions.region(region).https.onCall(() => {
@@ -97,31 +112,56 @@ const scheduleMessage = onTaskDispatched<Message>(
 
 exports.message = { send: sendMessage, task: scheduleMessage }
 
+const queueMessage = async (
+  uid: string,
+  scheduledAt: Date,
+  title: string,
+  body: string
+): Promise<string | undefined> => {
+  const userRef = await firestore.collection('users').doc(uid)
+  const userSnapshot = await userRef.get()
+  let taskId = undefined
+  if (userSnapshot.exists) {
+    logger.info(
+      'now creating task ... ' + JSON.stringify(userSnapshot.get('tokens')),
+      {
+        structuredData: true
+      }
+    )
+    const tokens = userSnapshot.get('tokens') || []
+    if (tokens.length > 0) {
+      if (scheduledAt > new Date()) {
+        taskId = randomUUID()
+        await messageService.queueMessage(taskId, scheduledAt, {
+          title,
+          body,
+          tokens
+        })
+      }
+    }
+  }
+  return taskId
+}
+
 // Firestoreのデータを作成する際に、createdAtとupdatedAtを挿入する。
-const createTodoTimestamp = onDocumentCreated(
+const todoCreated = onDocumentCreated(
   '/users/{uid}/todos/{todoId}',
-  (event) => {
+  async (event) => {
     const snapshot = event.data
     if (!snapshot) return null
     logger.info('now creating timestamps ...', { structuredData: true })
 
-    // const userRef = doc(firestore, )
-    /*
-    const scheduledAt = snapshot.data().scheduledAt.toDate()
-    let taskId = undefined
-    if (scheduledAt > new Date()) {
-      taskId = crypto.randomUUID()
-      messageService.queueMessage(taskId, scheduledAt, {
-        title: snapshot.data().title,
-        body: snapshot.data().body,
-        tokens: snapshot.data().tokens
-      })
-    }
-    */
+    const taskId = await queueMessage(
+      event.params.uid,
+      snapshot.data().scheduledAt.toDate(),
+      snapshot.data().title,
+      snapshot.data().instruction
+    )
     return snapshot.ref.set(
       {
         createdAt: Timestamp.now(),
-        updatedAt: Timestamp.now()
+        updatedAt: Timestamp.now(),
+        taskId
       },
       { merge: true }
     )
@@ -129,25 +169,51 @@ const createTodoTimestamp = onDocumentCreated(
 )
 
 // Firestoreのデータを書き換える際に、updatedAtを更新する。
-const updateTodoTimestamp = onDocumentUpdated(
+const todoUpdated = onDocumentUpdated(
   '/users/{uid}/todos/{todoId}',
-  (event) => {
+  async (event) => {
     const updatedAtBefore = event.data?.before?.data().updatedAt
     if (!updatedAtBefore) return null
     const updatedAtAfter = event.data?.after?.data().updatedAt
     if (updatedAtBefore.isEqual(updatedAtAfter)) return null
 
     logger.info('now updating updatedAt ...', { structuredData: true })
+
+    let taskId = event.data?.before.data().taskId
+    if (taskId) {
+      await messageService.deleteTask(taskId)
+    }
+    taskId = await queueMessage(
+      event.params.uid,
+      event.data?.after.data().scheduledAt,
+      event.data?.after.data().title,
+      event.data?.after.data().instruction
+    )
+
     return event.data?.after.ref.set(
       {
-        updatedAt: Timestamp.now()
+        updatedAt: Timestamp.now(),
+        taskId
       },
       { merge: true }
     )
   }
 )
 
+// Firestoreのデータを削除するときに、関連するタスクを削除する。
+const todoDeleted = onDocumentDeleted(
+  '/users/{uid}/todos/{todoId}',
+  async (event) => {
+    const snapshot = event.data
+    const taskId = snapshot?.data()?.taskId
+    if (taskId) {
+      await messageService.deleteTask(taskId)
+    }
+  }
+)
+
 exports.todo = {
-  created: createTodoTimestamp,
-  updated: updateTodoTimestamp
+  created: todoCreated,
+  updated: todoUpdated,
+  deleted: todoDeleted
 }

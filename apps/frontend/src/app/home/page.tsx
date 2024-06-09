@@ -92,10 +92,12 @@ const Home = () => {
     if (inputValue === '') return
     if (!user) return
     try {
+      const now = new Date()
+      now.setMinutes(now.getMinutes() + 10)
       await addTodo({
         uid: user.uid,
         instruction: inputValue,
-        scheduledAt: new Date(),
+        scheduledAt: now,
         done: false,
         imageFile: file
       })
