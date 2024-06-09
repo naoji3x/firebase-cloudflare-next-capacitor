@@ -1,6 +1,6 @@
 'use client'
 
-import { firestore, storage } from '@/firebase/client'
+import { firestore } from '@/firebase/client'
 import {
   Todo,
   firestoreToTodo,
@@ -8,8 +8,7 @@ import {
 } from '@apps/firebase-functions/src/types/todo'
 import { WithId } from '@apps/firebase-functions/src/types/utils'
 import 'firebase/firestore'
-import { addDoc, collection, onSnapshot } from 'firebase/firestore'
-import { getDownloadURL, ref, uploadBytes } from 'firebase/storage'
+import { collection, onSnapshot } from 'firebase/firestore'
 import { useEffect, useState } from 'react'
 
 const collectionName = (uid: string) => `users/${uid}/todos`
@@ -47,51 +46,3 @@ export const useTodos = (uid?: string) => {
 
   return { todos }
 }
-
-type addTodoInput = {
-  uid: string
-  title?: string
-  instruction: string
-  scheduledAt: Date
-  done: boolean
-  imageFile?: File
-}
-
-const handleUpload = async (file: File): Promise<string | null> => {
-  if (!file) return null
-  const path = 'images/' + crypto.randomUUID()
-  console.log('Uploading file... ' + path)
-  const storageRef = ref(storage, path)
-  try {
-    await uploadBytes(storageRef, file)
-    console.log('File uploaded successfully')
-    return path
-  } catch (error) {
-    console.error('Error uploading file:', error)
-    return null
-  }
-}
-
-export const addTodo = async ({
-  uid,
-  title,
-  instruction,
-  scheduledAt,
-  done,
-  imageFile
-}: addTodoInput) => {
-  const imagePath = imageFile ? await handleUpload(imageFile) : undefined
-  const todo: Todo = {
-    uid,
-    title,
-    instruction,
-    scheduledAt,
-    done,
-    image: imagePath ?? undefined
-  }
-  const docRef = await addDoc(collection(firestore, collectionName(uid)), todo)
-  console.log('Document written with ID: ', docRef.id)
-}
-
-export const getImageUrl = async (image?: string) =>
-  image ? await getDownloadURL(ref(storage, image)) : ''

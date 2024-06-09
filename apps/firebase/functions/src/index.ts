@@ -104,6 +104,8 @@ const createTodoTimestamp = onDocumentCreated(
     const snapshot = event.data
     if (!snapshot) return null
     logger.info('now creating timestamps ...', { structuredData: true })
+
+    // const userRef = doc(firestore, )
     /*
     const scheduledAt = snapshot.data().scheduledAt.toDate()
     let taskId = undefined

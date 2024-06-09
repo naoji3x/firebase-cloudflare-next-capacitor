@@ -7,10 +7,12 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { signOut } from '@/features/auth/lib/google-auth'
 import { useAuth } from '@/features/auth/providers/auth-provider'
+import { addTodo, getImageUrl } from '@/features/db/api/todo'
+import { upsertToken } from '@/features/db/api/user'
+import { useTodos } from '@/features/db/hooks/todos'
+import { useMessage } from '@/features/messaging/hooks/message'
 import { useMessaging } from '@/features/messaging/providers/messaging-provider'
 import { functions } from '@/firebase/client'
-import { useMessage } from '@/hooks/message'
-import { addTodo, getImageUrl, useTodos } from '@/hooks/todos'
 import { Auth } from '@apps/firebase-functions/src/types/auth'
 import { Message } from '@apps/firebase-functions/src/types/message'
 import { Todo } from '@apps/firebase-functions/src/types/todo'
@@ -64,7 +66,6 @@ const Home = () => {
   const user = useAuth()
   const messaging = useMessaging()
   const { message } = useMessage()
-  const collectionName = `users/${user?.uid}/todos`
   const [file, setFile] = useState<File | undefined>(undefined)
   const [inputValue, setInputValue] = useState('')
   const [serverAuth, setServerAuth] = useState<Auth | null>(null)
@@ -75,6 +76,17 @@ const Home = () => {
       setFile(e.target.files[0])
     }
   }
+
+  useEffect(() => {
+    if (!messaging || messaging.token === null || !user) return
+    const token: string = messaging.token
+    const func = async () => {
+      console.log('requesting permission')
+      await upsertToken(user.uid, token)
+      console.log('getting token')
+    }
+    func()
+  }, [messaging, user])
 
   const handleAddTodo = async () => {
     if (inputValue === '') return
