@@ -64,11 +64,11 @@ const Home = () => {
   const user = useAuth()
   const messaging = useMessaging()
   const { message } = useMessage()
-  const collectionName = `users/${user?.authId}/todos`
+  const collectionName = `users/${user?.uid}/todos`
   const [file, setFile] = useState<File | undefined>(undefined)
   const [inputValue, setInputValue] = useState('')
   const [serverAuth, setServerAuth] = useState<Auth | null>(null)
-  const { todos } = useTodos(collectionName)
+  const { todos } = useTodos(user?.uid)
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
@@ -81,8 +81,7 @@ const Home = () => {
     if (!user) return
     try {
       await addTodo({
-        collectionName,
-        uid: user.authId,
+        uid: user.uid,
         instruction: inputValue,
         scheduledAt: new Date(),
         done: false,

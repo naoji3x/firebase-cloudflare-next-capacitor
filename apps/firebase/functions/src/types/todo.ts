@@ -6,7 +6,8 @@ const head = {
   title: z.string().optional(),
   instruction: z.string(),
   done: z.boolean(),
-  image: z.string().optional()
+  image: z.string().optional(),
+  taskId: z.string().optional()
 }
 
 const jsonBody = {

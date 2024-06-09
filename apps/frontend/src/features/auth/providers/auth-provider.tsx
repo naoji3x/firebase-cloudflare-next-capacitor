@@ -18,7 +18,7 @@ import {
 type UserContext = {
   name: string
   email: string
-  authId: string
+  uid: string
   photoUrl?: string | null
 }
 
@@ -33,7 +33,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const toUserContext = (user: FirebaseUser): UserContext => ({
     name: user.displayName || '',
     email: user.email || '',
-    authId: user.uid,
+    uid: user.uid,
     photoUrl: user.photoURL || ''
   })
 

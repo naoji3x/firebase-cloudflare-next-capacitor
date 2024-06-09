@@ -12,11 +12,14 @@ import { addDoc, collection, onSnapshot } from 'firebase/firestore'
 import { getDownloadURL, ref, uploadBytes } from 'firebase/storage'
 import { useEffect, useState } from 'react'
 
-export const useTodos = (collectionName: string) => {
+const collectionName = (uid: string) => `users/${uid}/todos`
+
+export const useTodos = (uid?: string) => {
   const [todos, setTodos] = useState<WithId<Todo>[]>([])
 
   useEffect(() => {
-    const col = collection(firestore, collectionName)
+    if (!uid) return
+    const col = collection(firestore, collectionName(uid))
     const unsubscribe = onSnapshot(col, (snapshot) => {
       const newTodos: WithId<Todo>[] = snapshot.docs
         .map((doc) => {
@@ -40,13 +43,12 @@ export const useTodos = (collectionName: string) => {
     })
     // コンポーネントがアンマウントされたときにリスナーを解除する
     return () => unsubscribe()
-  }, [collectionName])
+  }, [uid])
 
   return { todos }
 }
 
 type addTodoInput = {
-  collectionName: string
   uid: string
   title?: string
   instruction: string
@@ -71,7 +73,6 @@ const handleUpload = async (file: File): Promise<string | null> => {
 }
 
 export const addTodo = async ({
-  collectionName,
   uid,
   title,
   instruction,
@@ -88,7 +89,7 @@ export const addTodo = async ({
     done,
     image: imagePath ?? undefined
   }
-  const docRef = await addDoc(collection(firestore, collectionName), todo)
+  const docRef = await addDoc(collection(firestore, collectionName(uid)), todo)
   console.log('Document written with ID: ', docRef.id)
 }
 
