@@ -23,7 +23,7 @@ const TodoCard = ({
   ...props
 }) => {
   return (
-    <Card className={cn('w-[350px]', className)} {...props}>
+    <Card className={cn('w-full', className)} {...props}>
       <CardHeader>{title && <CardTitle>{title}</CardTitle>}</CardHeader>
       <CardContent>
         <form>
