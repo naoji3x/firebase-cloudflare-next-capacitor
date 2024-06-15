@@ -4,6 +4,8 @@ import { auth } from '@/firebase/client'
 import {
   User as FirebaseUser,
   GoogleAuthProvider,
+  browserLocalPersistence,
+  setPersistence,
   signInWithCredential
 } from 'firebase/auth'
 import { useSession } from 'next-auth/react'
@@ -46,6 +48,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         // サインインしていない場合はサインインしてユーザー情報を取得する。
         const func = async () => {
           try {
+            // ログイン情報を保持する
+            setPersistence(auth, browserLocalPersistence)
             const cred = GoogleAuthProvider.credential(session?.user.id_token)
             await signInWithCredential(auth, cred)
             if (auth.currentUser) {

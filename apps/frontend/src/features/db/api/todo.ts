@@ -3,7 +3,7 @@
 import { firestore, storage } from '@/firebase/client'
 import { Todo } from '@apps/firebase-functions/src/types/todo'
 import 'firebase/firestore'
-import { addDoc, collection } from 'firebase/firestore'
+import { addDoc, collection, deleteDoc, doc, setDoc } from 'firebase/firestore'
 import { getDownloadURL, ref, uploadBytes } from 'firebase/storage'
 
 const collectionName = (uid: string) => `users/${uid}/todos`
@@ -32,6 +32,17 @@ type addTodoInput = {
   imageFile?: File
 }
 
+type updateTodoInput = {
+  title?: string
+  instruction?: string
+  scheduledAt?: Date
+  done?: boolean
+  imageFile?: File
+}
+
+export const getImageUrl = async (image?: string) =>
+  image ? await getDownloadURL(ref(storage, image)) : ''
+
 export const addTodo = async ({
   uid,
   title,
@@ -53,5 +64,28 @@ export const addTodo = async ({
   console.log('Document written with ID: ', docRef.id)
 }
 
-export const getImageUrl = async (image?: string) =>
-  image ? await getDownloadURL(ref(storage, image)) : ''
+export const deleteTodo = async (uid: string, id: string) => {
+  const docRef = doc(firestore, collectionName(uid), id)
+  console.log(docRef.path)
+  await deleteDoc(docRef)
+}
+
+export const updateTodo = async (
+  uid: string,
+  id: string,
+  update: updateTodoInput
+) => {
+  const docRef = doc(firestore, collectionName(uid), id)
+  await setDoc(docRef, update, { merge: true })
+  console.log('Document written with ID: ', docRef.id)
+}
+
+export const doneTodo = async (
+  uid: string,
+  id: string,
+  done: boolean = true
+) => {
+  const docRef = doc(firestore, collectionName(uid), id)
+  await setDoc(docRef, { done }, { merge: true })
+  console.log('Document written with ID: ', docRef.id)
+}

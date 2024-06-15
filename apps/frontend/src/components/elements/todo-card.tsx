@@ -6,51 +6,64 @@ import {
   CardHeader,
   CardTitle
 } from '@/components/ui/card'
-import { Input } from '@/components/ui/input'
+import { Checkbox } from '@/components/ui/checkbox'
 import { Label } from '@/components/ui/label'
 import { cn } from '@/lib/utils'
+import { CheckedState } from '@radix-ui/react-checkbox'
 import { format } from 'date-fns'
 import { ja } from 'date-fns/locale'
+import { useState } from 'react'
 
 const TodoCard = ({
+  id = '',
   className = '',
   title = '',
   instruction = 'instruction',
   scheduledAt = new Date(),
-  createdAt = new Date(),
-  updatedAt = new Date(),
   imageUrl = '',
+  done = false,
+  onDelete = (id: string) => {},
+  onDone = (id: string, done: boolean) => {},
   ...props
 }) => {
+  const [checked, setChecked] = useState<boolean>(done)
+  const handleCheckboxChange = (state: CheckedState) => {
+    const checkedState: boolean = state === 'indeterminate' ? false : state
+    setChecked(checkedState)
+    onDone(id, checkedState)
+  }
+
   return (
     <Card className={cn('w-full', className)} {...props}>
-      <CardHeader>{title && <CardTitle>{title}</CardTitle>}</CardHeader>
-      <CardContent>
+      <CardHeader>
+        <CardTitle className="flex justify-between">
+          <span
+            className={cn({
+              'opacity-50 pointer-events-none': checked
+            })}
+          >
+            {title ? title : 'Todo'}
+          </span>
+          <Checkbox
+            defaultChecked={done}
+            checked={checked}
+            onCheckedChange={handleCheckboxChange}
+          />
+        </CardTitle>
+      </CardHeader>
+      <CardContent
+        className={cn({
+          'opacity-50 pointer-events-none': checked
+        })}
+      >
         <form>
           <div className="grid w-full items-center gap-4">
             <div className="flex flex-col space-y-1.5">
-              <Label htmlFor="instruction">内容</Label>
-              <Input
-                id="instruction"
-                placeholder="Name of your project"
-                defaultValue={instruction}
-              />
+              <div>{instruction}</div>
               <div className="flex justify-between items-center">
                 <Label htmlFor="instruction">予定日時</Label>
                 <span>
                   {format(scheduledAt, 'yyyy/MM/dd HH:mm', { locale: ja })}
-                </span>
-              </div>
-              <div className="flex justify-between items-center">
-                <Label htmlFor="instruction">登録日</Label>
-                <span>
-                  {format(createdAt, 'yyyy/MM/dd HH:mm', { locale: ja })}
-                </span>
-              </div>
-              <div className="flex justify-between items-center">
-                <Label htmlFor="instruction">更新日</Label>
-                <span>
-                  {format(updatedAt, 'yyyy/MM/dd HH:mm', { locale: ja })}
                 </span>
               </div>
               {imageUrl && (
@@ -61,9 +74,10 @@ const TodoCard = ({
           </div>
         </form>
       </CardContent>
-      <CardFooter className="flex justify-between">
-        <Button variant="destructive">削除</Button>
-        <Button>更新</Button>
+      <CardFooter className="flex justify-end">
+        <Button variant="destructive" onClick={() => onDelete(id)}>
+          削除
+        </Button>
       </CardFooter>
     </Card>
   )

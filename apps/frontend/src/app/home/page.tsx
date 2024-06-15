@@ -1,5 +1,7 @@
 'use client'
 
+import DatePicker from '@/components/elements/date-picker'
+import TimePicker from '@/components/elements/time-picker'
 import TodoCard from '@/components/elements/todo-card'
 import {
   Accordion,
@@ -9,10 +11,14 @@ import {
 } from '@/components/ui/accordion'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import { useToast } from '@/components/ui/use-toast'
 import { signOut } from '@/features/auth/lib/google-auth'
 import { useAuth } from '@/features/auth/providers/auth-provider'
-import { addTodo, getImageUrl } from '@/features/db/api/todo'
+import {
+  addTodo,
+  deleteTodo,
+  doneTodo,
+  getImageUrl
+} from '@/features/db/api/todo'
 import { upsertToken } from '@/features/db/api/user'
 import { useTodos } from '@/features/db/hooks/todos'
 import { useMessage } from '@/features/messaging/hooks/message'
@@ -28,7 +34,15 @@ import 'firebase/firestore'
 import { httpsCallable } from 'firebase/functions'
 import { useEffect, useState } from 'react'
 
-const Card = ({ todo }: { todo: WithId<Todo> }) => {
+const Card = ({
+  todo,
+  onDelete,
+  onDone
+}: {
+  todo: WithId<Todo>
+  onDelete: (id: string) => {}
+  onDone: (id: string, done: boolean) => {}
+}) => {
   const [imageUrl, setImageUrl] = useState<string>('')
   useEffect(() => {
     const func = async () => setImageUrl(await getImageUrl(todo.image))
@@ -37,12 +51,14 @@ const Card = ({ todo }: { todo: WithId<Todo> }) => {
 
   return (
     <TodoCard
+      id={todo.id}
       title={todo.title}
       instruction={todo.instruction}
       scheduledAt={todo.scheduledAt}
-      createdAt={todo.createdAt}
-      updatedAt={todo.updatedAt}
+      done={todo.done}
       imageUrl={imageUrl}
+      onDelete={(id: string) => onDelete(id)}
+      onDone={(id, done) => onDone(id, done)}
     />
   )
 }
@@ -73,13 +89,15 @@ const Home = () => {
   const user = useAuth()
   const messaging = useMessaging()
   const { message } = useMessage()
-  const [file, setFile] = useState<File | undefined>(undefined)
+  const [titleValue, setTitleValue] = useState('')
   const [todoValue, setTodoValue] = useState('')
+  const [file, setFile] = useState<File | undefined>(undefined)
   const [messageValue, setMessageValue] = useState('')
   const [serverAuth, setServerAuth] = useState<Auth | null>(null)
+  const [date, setDate] = useState<Date>(new Date())
+  const [time, setTime] = useState<Date>(new Date())
   const { todos } = useTodos(user?.uid)
   const { setToastMessage } = useSpeechToast()
-  const { toast } = useToast()
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
@@ -111,27 +129,55 @@ const Home = () => {
 
   // handler for adding todo
   const handleAddTodo = async () => {
-    if (todoValue === '') return
-    if (!user) return
+    if (todoValue === '' || !user) return
     try {
-      const now = new Date()
-      now.setMinutes(now.getMinutes() + 10)
+      const scheduledAt = new Date(
+        date.getFullYear(),
+        date.getMonth(),
+        date.getDate(),
+        time.getHours(),
+        time.getMinutes()
+      )
+      console.log('add todo', titleValue, todoValue, scheduledAt)
       await addTodo({
         uid: user.uid,
+        title: titleValue,
         instruction: todoValue,
-        scheduledAt: now,
+        scheduledAt,
         done: false,
         imageFile: file
       })
+      setTitleValue('')
+      setTodoValue('')
+      setFile(undefined)
     } catch (e) {
-      console.error('Error adding document: ', e)
+      console.error('Error addTodo: ', e)
+    }
+  }
+
+  const handleDeleteTodo = async (id: string) => {
+    if (!user) return
+    console.log('delete todo', id)
+    try {
+      deleteTodo(user.uid, id)
+    } catch (e) {
+      console.error('Error deleteTodo: ', e)
+    }
+  }
+
+  const handleDoneTodo = async (id: string, done: boolean) => {
+    if (!user) return
+    console.log('done todo', id, done)
+    try {
+      doneTodo(user.uid, id, done)
+    } catch (e) {
+      console.error('Error doneTodo: ', e)
     }
   }
 
   // handler for sending message
   const handleSendMessage = async () => {
-    if (!messaging?.token) return
-    if (messageValue === '') return
+    if (!messaging?.token || messageValue === '') return
     try {
       console.log('sending message : ' + messaging.token)
       await sendMessage('メッセージ', messageValue, messaging.token)
@@ -173,23 +219,43 @@ const Home = () => {
 
       <main className="flex-grow flex flex-col items-center justify-center bg-gray-100">
         <section className="container mx-auto px-4 py-8 text-center">
-          <h2 className="text-2xl font-semibold mb-4">Input</h2>
+          <h2 className="text-2xl font-semibold mb-4">やることの入力</h2>
           <Input
-            className="rounded-full"
-            placeholder="Todo"
+            className="rounded-full mb-2"
+            placeholder="タイトル"
+            value={titleValue}
+            onChange={(e) => setTitleValue(e.target.value)}
+          />
+          <Input
+            className="rounded-full mb-2"
+            placeholder="やること"
             value={todoValue}
             onChange={(e) => setTodoValue(e.target.value)}
           />
           <div className="grid w-full items-center gap-1.5">
-            <Label htmlFor="picture">Picture</Label>
+            <Label htmlFor="picture">画像</Label>
             <Input id="picture" type="file" onChange={handleFileChange} />
           </div>
+
+          <div className="py-4 flex flex-col sm:flex-row justify-center items-center gap-4">
+            <DatePicker
+              date={date}
+              onSelect={(date) => setDate(date || new Date())}
+            />
+            <TimePicker
+              date={time}
+              onValueChange={(time) => setTime(time || new Date())}
+            />
+          </div>
+
           <div className="text-right my-3">
             <Button onClick={handleAddTodo} disabled={!todoValue}>
               保存
             </Button>
           </div>
-
+          <h2 className="text-2xl font-semibold mb-4">
+            firebase cloud messagingのテスト
+          </h2>
           <Input
             className="rounded-full"
             placeholder="Message"
@@ -233,12 +299,16 @@ const Home = () => {
         </section>
 
         <section className="container mx-auto px-4 py-8 text-center bg-white">
-          <h2 className="text-2xl font-semibold mb-4">Todo</h2>
+          <h2 className="text-2xl font-semibold mb-4">やることリスト</h2>
 
           <div className="flex flex-wrap justify-center">
             {todos.map((t) => (
               <div key={t.id} className="w-full sm:w-1/2 lg:w-1/3 p-4">
-                <Card todo={t} />
+                <Card
+                  todo={t}
+                  onDelete={handleDeleteTodo}
+                  onDone={handleDoneTodo}
+                />
               </div>
             ))}
           </div>
