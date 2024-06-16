@@ -28,6 +28,7 @@
     "mhutchie",
     "postcss",
     "tfvars",
+    "typegen",
     "unifiedjs"
   ]
 }

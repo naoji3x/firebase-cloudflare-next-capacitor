@@ -32,7 +32,8 @@
   "workspaces": [
     "apps/frontend",
     "apps/firebase",
-    "apps/firebase/functions"
+    "apps/firebase/functions",
+    "apps/cloudflare/pages"
   ],
   "dependencies": {
     "@apps/firebase-functions": "*"
