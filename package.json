@@ -21,7 +21,8 @@
     "firebase:list": "npm run list -w apps/firebase",
     "firebase:emulator": "npm run emulator -w apps/firebase",
     "frontend:dev": "npm run dev -w apps/frontend",
-    "frontend:storybook": "npm run storybook -w apps/frontend"
+    "frontend:storybook": "npm run storybook -w apps/frontend",
+    "cloudflare:build": "npm run cloudflare:build -w apps/frontend"
   },
   "engines": {
     "npm": ">=8.19.4",
