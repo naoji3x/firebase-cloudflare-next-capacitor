@@ -1,6 +1,7 @@
 'use client'
 import { auth as firebaseAuth } from '@/firebase/client'
 import { User as FirebaseUser } from 'firebase/auth'
+import { useSession } from 'next-auth/react'
 import {
   ReactNode,
   createContext,
@@ -22,6 +23,7 @@ const AuthContext = createContext<UserContextType>(undefined)
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [userContext, setUserContext] = useState<UserContextType>()
+  const { data: session = null } = useSession()
 
   const toUserContext = (user: FirebaseUser): UserContext => ({
     name: user.displayName || '',
@@ -29,6 +31,12 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     uid: user.uid,
     photoUrl: user.photoURL || ''
   })
+
+  useEffect(() => {
+    if (session) {
+      console.log('you are: ' + JSON.stringify(session.user))
+    }
+  }, [session])
 
   useEffect(() => {
     const unsubscribe = firebaseAuth.onAuthStateChanged((user) => {
