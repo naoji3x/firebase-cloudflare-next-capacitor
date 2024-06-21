@@ -6,10 +6,8 @@ export const env = createEnv({
     AUTH_SECRET: z.string(),
     AUTH_GOOGLE_ID: z.string(),
     AUTH_GOOGLE_SECRET: z.string()
-    // VERSION: z.string()
   },
   client: {
-    NEXT_PUBLIC_APP_URL: z.string(),
     NEXT_PUBLIC_API_KEY: z.string(),
     NEXT_PUBLIC_AUTH_DOMAIN: z.string(),
     NEXT_PUBLIC_PROJECT_ID: z.string(),
@@ -25,7 +23,6 @@ export const env = createEnv({
     AUTH_GOOGLE_ID: process.env.AUTH_GOOGLE_ID,
     AUTH_GOOGLE_SECRET: process.env.AUTH_GOOGLE_SECRET,
 
-    NEXT_PUBLIC_APP_URL: process.env.NEXT_PUBLIC_APP_URL,
     NEXT_PUBLIC_API_KEY: process.env.NEXT_PUBLIC_API_KEY,
     NEXT_PUBLIC_AUTH_DOMAIN: process.env.NEXT_PUBLIC_AUTH_DOMAIN,
     NEXT_PUBLIC_PROJECT_ID: process.env.NEXT_PUBLIC_PROJECT_ID,
