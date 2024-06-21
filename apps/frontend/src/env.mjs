@@ -3,9 +3,9 @@ import { z } from 'zod'
 
 export const env = createEnv({
   server: {
-    NEXTAUTH_SECRET: z.string(),
-    GOOGLE_ID: z.string(),
-    GOOGLE_SECRET: z.string()
+    AUTH_SECRET: z.string(),
+    AUTH_GOOGLE_ID: z.string(),
+    AUTH_GOOGLE_SECRET: z.string()
     // VERSION: z.string()
   },
   client: {
@@ -21,9 +21,9 @@ export const env = createEnv({
   },
 
   runtimeEnv: {
-    NEXTAUTH_SECRET: process.env.NEXTAUTH_SECRET,
-    GOOGLE_ID: process.env.GOOGLE_ID,
-    GOOGLE_SECRET: process.env.GOOGLE_SECRET,
+    AUTH_SECRET: process.env.AUTH_SECRET,
+    AUTH_GOOGLE_ID: process.env.AUTH_GOOGLE_ID,
+    AUTH_GOOGLE_SECRET: process.env.AUTH_GOOGLE_SECRET,
 
     NEXT_PUBLIC_APP_URL: process.env.NEXT_PUBLIC_APP_URL,
     NEXT_PUBLIC_API_KEY: process.env.NEXT_PUBLIC_API_KEY,

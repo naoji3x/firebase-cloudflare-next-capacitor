@@ -1,12 +1,12 @@
-import { authOptions } from '@/pages/api/auth/[...nextauth]'
-import { getServerSession } from 'next-auth'
+export const runtime = 'edge'
+
+import { auth } from '@/auth'
 import { redirect } from 'next/navigation'
 import SocialSignIn from './_components/social-sign-in'
 
 const Index = async () => {
-  const session = await getServerSession(authOptions)
-  const user = session?.user
-  if (user) {
+  const session = await auth()
+  if (session) {
     redirect('/home')
   }
 

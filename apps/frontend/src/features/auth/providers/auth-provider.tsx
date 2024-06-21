@@ -1,14 +1,6 @@
 'use client'
-import { signOut } from '@/features/auth/lib/google-auth'
-import { auth } from '@/firebase/client'
-import {
-  User as FirebaseUser,
-  GoogleAuthProvider,
-  browserLocalPersistence,
-  setPersistence,
-  signInWithCredential
-} from 'firebase/auth'
-import { useSession } from 'next-auth/react'
+import { auth as firebaseAuth } from '@/firebase/client'
+import { User as FirebaseUser } from 'firebase/auth'
 import {
   ReactNode,
   createContext,
@@ -29,7 +21,6 @@ export type UserContextType = UserContext | null | undefined
 const AuthContext = createContext<UserContextType>(undefined)
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
-  const { data: session = null } = useSession()
   const [userContext, setUserContext] = useState<UserContextType>()
 
   const toUserContext = (user: FirebaseUser): UserContext => ({
@@ -40,35 +31,15 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   })
 
   useEffect(() => {
-    if (session) {
-      if (auth.currentUser) {
-        // サインインしている場合はユーザー情報を設定する。
-        setUserContext(toUserContext(auth.currentUser))
+    const unsubscribe = firebaseAuth.onAuthStateChanged((user) => {
+      if (user) {
+        setUserContext(toUserContext(user))
       } else {
-        // サインインしていない場合はサインインしてユーザー情報を取得する。
-        const func = async () => {
-          try {
-            // ログイン情報を保持する
-            setPersistence(auth, browserLocalPersistence)
-            const cred = GoogleAuthProvider.credential(session?.user.id_token)
-            await signInWithCredential(auth, cred)
-            if (auth.currentUser) {
-              setUserContext(toUserContext(auth.currentUser))
-            } else {
-              // エラー時はとにかくサインアウトする
-              console.error('Failed to sign in')
-              await signOut()
-            }
-          } catch (error) {
-            // エラー時はとにかくサインアウトする
-            console.error(error)
-            await signOut()
-          }
-        }
-        func()
+        setUserContext(null)
       }
-    }
-  }, [session])
+    })
+    return () => unsubscribe()
+  }, [])
 
   return (
     <AuthContext.Provider value={userContext}>

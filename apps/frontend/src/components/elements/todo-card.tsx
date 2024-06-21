@@ -9,7 +9,6 @@ import {
 import { Checkbox } from '@/components/ui/checkbox'
 import { Label } from '@/components/ui/label'
 import { cn } from '@/lib/utils'
-import { CheckedState } from '@radix-ui/react-checkbox'
 import { format } from 'date-fns'
 import { ja } from 'date-fns/locale'
 import { useState } from 'react'
@@ -27,10 +26,10 @@ const TodoCard = ({
   ...props
 }) => {
   const [checked, setChecked] = useState<boolean>(done)
-  const handleCheckboxChange = (state: CheckedState) => {
-    const checkedState: boolean = state === 'indeterminate' ? false : state
-    setChecked(checkedState)
-    onDone(id, checkedState)
+  const handleCheckboxChange = (checked: boolean | 'indeterminate') => {
+    const state: boolean = checked === 'indeterminate' ? false : checked
+    setChecked(state)
+    onDone(id, state)
   }
 
   return (
