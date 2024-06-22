@@ -1,3 +1,4 @@
+// code for cloudflare development -- start
 import { setupDevPlatform } from '@cloudflare/next-on-pages/next-dev'
 
 // Here we use the @cloudflare/next-on-pages next-dev module to allow us to use bindings during local development
@@ -6,6 +7,7 @@ import { setupDevPlatform } from '@cloudflare/next-on-pages/next-dev'
 if (process.env.NODE_ENV === 'development') {
   await setupDevPlatform()
 }
+// code for cloudflare development -- end
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {}

@@ -8,9 +8,12 @@
 !.vscode/launch.json
 !.vscode/extensions.json
 
-# local env files
-.env*.local
+# env files
+# オープン、且つ、テンプレートプロジェクトのため、.envファイルはgitに含めない
 .env
+.env*.local
+.env.development
+.env.production
 
 # dependencies
 /node_modules

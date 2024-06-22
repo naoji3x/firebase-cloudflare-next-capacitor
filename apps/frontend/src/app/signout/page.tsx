@@ -1,18 +1,24 @@
-import { signOut } from '@/auth'
+'use client'
+import { signOut } from '@/features/auth/lib/google-auth'
+import { useEffect } from 'react'
 
-const SignOut = () => {
+//
+// firestoreのsnapshotを使っている画面等で、直接singOut関数を呼び出すと、
+// unsubscribeが呼ばれずにログアウトしてエラーになるため、一度このページにリダイレクトしてからログアウト処理を行う。
+//
+const SignOut = ({ redirect = '/' }: { redirect: string }) => {
+  useEffect(() => {
+    const func = async () => {
+      await signOut(redirect)
+    }
+    func()
+  }, [redirect])
+
   return (
-    <form
-      action={async () => {
-        'use server'
-        await signOut({ redirectTo: '/' })
-      }}
-    >
-      <button className="border p-2 bg-black text-white rounded" type="submit">
-        SignOut
-      </button>
-    </form>
+    <div
+      className="h-screen w-screen flex justify-center items-center flex-col space-y-10"
+      aria-label="signing out ..."
+    />
   )
 }
-
 export default SignOut

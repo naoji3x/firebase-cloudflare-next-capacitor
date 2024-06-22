@@ -11,7 +11,6 @@ import {
 } from '@/components/ui/accordion'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import { signOut } from '@/features/auth/lib/google-auth'
 import { useAuth } from '@/features/auth/providers/auth-provider'
 import {
   addTodo,
@@ -31,6 +30,7 @@ import { Todo } from '@apps/firebase-functions/src/types/todo'
 import { WithId } from '@apps/firebase-functions/src/types/utils'
 import { Label } from '@radix-ui/react-label'
 import { httpsCallable } from 'firebase/functions'
+import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 
 const Card = ({
@@ -85,6 +85,7 @@ const sendMessage = async (
 }
 
 const Home = () => {
+  const router = useRouter()
   const user = useAuth()
   const messaging = useMessaging()
   const { message } = useMessage()
@@ -204,12 +205,7 @@ const Home = () => {
       <header className="w-full bg-foreground text-background py-6">
         <div className="container mx-auto px-4 flex justify-between items-center">
           <h1 className="text-3xl font-bold">{user ? user.name : 'No user'}</h1>
-          <Button
-            variant={'secondary'}
-            onClick={async () => {
-              await signOut()
-            }}
-          >
+          <Button variant={'secondary'} onClick={() => router.push('/signout')}>
             Sign Out
           </Button>
         </div>
