@@ -33,6 +33,10 @@ export const MessagingProvider = ({ children }: { children: ReactNode }) => {
           const supported = await isSupported()
           let token = null
           if (supported) {
+            // https://github.com/firebase/firebase-js-sdk/issues/7693
+            navigator.serviceWorker.register('/firebase-messaging-sw.js', {
+              scope: '/firebase-cloud-messaging-push-scope'
+            })
             const messaging = getMessaging(firebaseApp)
             token = await getToken(messaging, {
               vapidKey: env.NEXT_PUBLIC_VAPID_KEY

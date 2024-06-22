@@ -1,6 +1,14 @@
 'use client'
+
+import { signOut } from '@/features/auth/lib/google-auth'
 import { auth as firebaseAuth } from '@/firebase/client'
-import { User as FirebaseUser } from 'firebase/auth'
+import {
+  User as FirebaseUser,
+  GoogleAuthProvider,
+  browserLocalPersistence,
+  setPersistence,
+  signInWithCredential
+} from 'firebase/auth'
 import { useSession } from 'next-auth/react'
 import {
   ReactNode,
@@ -35,9 +43,36 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   useEffect(() => {
     if (session) {
       console.log('you are: ' + JSON.stringify(session.user))
+      if (firebaseAuth.currentUser) {
+        // サインインしている場合はユーザー情報を設定する。
+        setUserContext(toUserContext(firebaseAuth.currentUser))
+      } else {
+        // サインインしていない場合はサインインしてユーザー情報を取得する。
+        const func = async () => {
+          try {
+            // ログイン情報を保持する
+            setPersistence(firebaseAuth, browserLocalPersistence)
+            const cred = GoogleAuthProvider.credential(session?.user.id_token)
+            await signInWithCredential(firebaseAuth, cred)
+            if (firebaseAuth.currentUser) {
+              setUserContext(toUserContext(firebaseAuth.currentUser))
+            } else {
+              // エラー時はとにかくサインアウトする
+              console.error('Failed to sign in')
+              await signOut()
+            }
+          } catch (error) {
+            // エラー時はとにかくサインアウトする
+            console.error(error)
+            await signOut()
+          }
+        }
+        func()
+      }
     }
   }, [session])
 
+  /*
   useEffect(() => {
     const unsubscribe = firebaseAuth.onAuthStateChanged((user) => {
       if (user) {
@@ -48,6 +83,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     })
     return () => unsubscribe()
   }, [])
+  */
 
   return (
     <AuthContext.Provider value={userContext}>
