@@ -11,7 +11,7 @@ import {
 } from '@/components/ui/accordion'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-// import { signOut } from '@/features/auth/lib/google-auth'
+import { signOut } from '@/features/auth/lib/google-auth'
 import { useAuth } from '@/features/auth/providers/auth-provider'
 import {
   addTodo,
@@ -31,7 +31,6 @@ import { Todo } from '@apps/firebase-functions/src/types/todo'
 import { WithId } from '@apps/firebase-functions/src/types/utils'
 import { Label } from '@radix-ui/react-label'
 import { httpsCallable } from 'firebase/functions'
-import { signOut } from 'next-auth/react'
 import { useEffect, useState } from 'react'
 
 const Card = ({
@@ -208,8 +207,7 @@ const Home = () => {
           <Button
             variant={'secondary'}
             onClick={async () => {
-              console.log('clicked')
-              await signOut({ redirect: true, callbackUrl: '/' })
+              await signOut()
             }}
           >
             Sign Out

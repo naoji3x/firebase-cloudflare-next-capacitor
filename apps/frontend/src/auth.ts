@@ -1,14 +1,13 @@
+import authConfig from '@/auth.config'
 import { env } from '@/env.mjs'
 import NextAuth from 'next-auth'
-import Google from 'next-auth/providers/google'
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
-  providers: [Google],
+  ...authConfig,
   secret: env.AUTH_SECRET,
   session: {
     strategy: 'jwt'
   },
-  pages: {},
   callbacks: {
     async jwt({ token, account }) {
       return { ...token, ...account }

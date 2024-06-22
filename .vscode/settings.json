@@ -27,6 +27,8 @@
     "lucide",
     "mhutchie",
     "postcss",
+    "signin",
+    "signout",
     "tfvars",
     "typegen",
     "unifiedjs"
