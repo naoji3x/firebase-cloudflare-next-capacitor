@@ -1,14 +1,6 @@
-terraform {
-  required_providers {
-    cloudflare = {
-      source  = "cloudflare/cloudflare"
-      version = "~> 4"
-    }
-  }
-}
-
-provider "cloudflare" {
-  api_token = var.api_token
+import {
+  id = format("%s/%s", var.account_id, var.project_name)
+  to = cloudflare_pages_project.deployment_configs
 }
 
 resource "cloudflare_pages_project" "deployment_configs" {
