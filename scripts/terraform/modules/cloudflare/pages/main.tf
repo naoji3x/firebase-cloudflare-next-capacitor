@@ -31,7 +31,7 @@ resource "cloudflare_pages_project" "deployment_configs" {
   }
   build_config {
     build_command   = "npm run cloudflare:build"
-    destination_dir = "apps/frontend/out"
+    destination_dir = "apps/frontend/.vercel/output/static"
     root_dir        = ""
   }
 
