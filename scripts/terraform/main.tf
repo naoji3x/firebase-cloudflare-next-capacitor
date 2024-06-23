@@ -1,12 +1,12 @@
 # Creates a new Google Cloud project.
 resource "google_project" "default" {
   provider = google-beta.no_user_project_override
-  org_id   = var.org_id
+  org_id   = var.firebase_org_id
 
   # project_id should be globally unique
-  project_id      = var.project_id
-  name            = var.project_name
-  billing_account = var.billing_account
+  project_id      = var.firebase_project_id
+  name            = var.firebase_project_name
+  billing_account = var.firebase_billing_account
 
   # Required for the project to display in any list of Firebase projects.
   labels = {
@@ -58,7 +58,7 @@ resource "google_firebase_project" "default" {
 # Firebase Web App
 resource "google_firebase_web_app" "default" {
   provider     = google-beta
-  project      = var.project_id
+  project      = var.firebase_project_id
   display_name = "Todo Web App"
 
   depends_on = [
@@ -75,19 +75,11 @@ resource "google_firebase_web_app" "default" {
 # Error: Error creating DefaultSupportedIdpConfig: googleapi: Error 403: Your application is authenticating by using local Application Default Credentials. The identitytoolkit.googleapis.com API requires a quota project, which is not set by default. To learn how to set your quota project, see https://cloud.google.com/docs/authentication/adc-troubleshooting/user-creds .
 # のエラーが出てしまい、対応できなかったため、手動で設定することにした。
 #
-# module "authentication" {
-#   source                      = "./modules/authentication"
-#   project_id                  = var.project_id
-#   services_ready              = google_firebase_project.default
-#   iap_brand_support_email     = var.iap_brand_support_email
-#   iap_brand_application_title = var.iap_brand_application_title
-#   iap_client_display_name     = var.iap_client_display_name
-# }
 
 # # Firebase Firestore
 module "firestore" {
   source         = "./modules/firestore"
-  project_id     = var.project_id
+  project_id     = var.firebase_project_id
   location       = local.region
   services_ready = google_firebase_project.default
 }
@@ -95,8 +87,31 @@ module "firestore" {
 # Firebase Cloud Storage
 module "storage" {
   source           = "./modules/storage"
-  project_id       = var.project_id
+  project_id       = var.firebase_project_id
   location         = local.region
   services_ready_1 = module.firestore.firestore_database
   services_ready_2 = google_firebase_project.default
+}
+
+# Cloudflare Pages
+module "cloudflare" {
+  source                          = "./modules/cloudflare/pages"
+  email                           = var.cloudflare_email
+  api_token                       = var.cloudflare_api_token
+  account_id                      = var.cloudflare_account_id
+  project_name                    = var.cloudflare_project_name
+  production_branch               = var.cloudflare_production_branch
+  branch                          = var.cloudflare_branch
+  github_owner                    = var.github_owner
+  github_repo                     = var.github_repo
+  NEXT_PUBLIC_API_KEY             = var.NEXT_PUBLIC_API_KEY
+  NEXT_PUBLIC_AUTH_DOMAIN         = var.NEXT_PUBLIC_AUTH_DOMAIN
+  NEXT_PUBLIC_PROJECT_ID          = var.NEXT_PUBLIC_PROJECT_ID
+  NEXT_PUBLIC_STORAGE_BUCKET      = var.NEXT_PUBLIC_STORAGE_BUCKET
+  NEXT_PUBLIC_MESSAGING_SENDER_ID = var.NEXT_PUBLIC_MESSAGING_SENDER_ID
+  NEXT_PUBLIC_APP_ID              = var.NEXT_PUBLIC_APP_ID
+  NEXT_PUBLIC_VAPID_KEY           = var.NEXT_PUBLIC_VAPID_KEY
+  AUTH_SECRET                     = var.AUTH_SECRET
+  AUTH_GOOGLE_ID                  = var.AUTH_GOOGLE_ID
+  AUTH_GOOGLE_SECRET              = var.AUTH_GOOGLE_SECRET
 }
