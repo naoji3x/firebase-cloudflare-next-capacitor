@@ -18,7 +18,7 @@ resource "cloudflare_pages_project" "deployment_configs" {
       production_deployment_enabled = true
       preview_deployment_setting    = "custom"
       preview_branch_includes       = ["develop"]
-      preview_branch_excludes       = ["main"]
+      preview_branch_excludes       = [var.production_branch]
     }
   }
   build_config {
@@ -29,6 +29,25 @@ resource "cloudflare_pages_project" "deployment_configs" {
 
   deployment_configs {
     preview {
+      compatibility_flags = ["nodejs_compat"]
+      environment_variables = {
+        NEXT_PUBLIC_API_KEY             = var.NEXT_PUBLIC_API_KEY_PREVIEW
+        NEXT_PUBLIC_AUTH_DOMAIN         = var.NEXT_PUBLIC_AUTH_DOMAIN_PREVIEW
+        NEXT_PUBLIC_PROJECT_ID          = var.NEXT_PUBLIC_PROJECT_ID_PREVIEW
+        NEXT_PUBLIC_STORAGE_BUCKET      = var.NEXT_PUBLIC_STORAGE_BUCKET_PREVIEW
+        NEXT_PUBLIC_MESSAGING_SENDER_ID = var.NEXT_PUBLIC_MESSAGING_SENDER_ID_PREVIEW
+        NEXT_PUBLIC_APP_ID              = var.NEXT_PUBLIC_APP_ID_PREVIEW
+        NEXT_PUBLIC_VAPID_KEY           = var.NEXT_PUBLIC_VAPID_KEY_PREVIEW
+      }
+      secrets = {
+        AUTH_SECRET        = var.AUTH_SECRET_PREVIEW
+        AUTH_GOOGLE_ID     = var.AUTH_GOOGLE_ID_PREVIEW
+        AUTH_GOOGLE_SECRET = var.AUTH_GOOGLE_SECRET_PREVIEW
+      }
+    }
+
+    production {
+      compatibility_flags = ["nodejs_compat"]
       environment_variables = {
         NEXT_PUBLIC_API_KEY             = var.NEXT_PUBLIC_API_KEY
         NEXT_PUBLIC_AUTH_DOMAIN         = var.NEXT_PUBLIC_AUTH_DOMAIN
