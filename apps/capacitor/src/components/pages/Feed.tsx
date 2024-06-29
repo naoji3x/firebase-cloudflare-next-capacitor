@@ -1,5 +1,5 @@
-import Image from 'next/image';
-import Card from '../ui/Card';
+import Image from 'next/image'
+import Card from '../ui/Card'
 
 import {
   IonPage,
@@ -10,22 +10,22 @@ import {
   IonButton,
   IonIcon,
   IonContent,
-  IonMenuButton,
-} from '@ionic/react';
-import Notifications from './Notifications';
-import { useState } from 'react';
-import { notificationsOutline } from 'ionicons/icons';
-import { selectHomeItems } from '../../store/selectors';
-import Store from '../../store';
+  IonMenuButton
+} from '@ionic/react'
+import Notifications from './Notifications'
+import { useState } from 'react'
+import { notificationsOutline } from 'ionicons/icons'
+import { selectHomeItems } from '../../store/selectors'
+import Store from '../../store'
 
 type FeedCardProps = {
-  title: string;
-  type: string;
-  text: string;
-  author: string;
-  authorAvatar: string;
-  image: string;
-};
+  title: string
+  type: string
+  text: string
+  author: string
+  authorAvatar: string
+  image: string
+}
 
 const FeedCard = ({
   title,
@@ -33,7 +33,7 @@ const FeedCard = ({
   text,
   author,
   authorAvatar,
-  image,
+  image
 }: FeedCardProps) => (
   <Card className="my-4 mx-auto">
     <div className="h-32 w-full relative">
@@ -69,11 +69,11 @@ const FeedCard = ({
       </div>
     </div>
   </Card>
-);
+)
 
 const Feed = () => {
-  const homeItems = Store.useState(selectHomeItems);
-  const [showNotifications, setShowNotifications] = useState(false);
+  const homeItems = Store.useState(selectHomeItems)
+  const [showNotifications, setShowNotifications] = useState(false)
 
   return (
     <IonPage>
@@ -105,7 +105,7 @@ const Feed = () => {
         ))}
       </IonContent>
     </IonPage>
-  );
-};
+  )
+}
 
-export default Feed;
+export default Feed

@@ -6,15 +6,15 @@ import {
   IonTitle,
   IonContent,
   IonList,
-  IonToggle,
-} from '@ionic/react';
+  IonToggle
+} from '@ionic/react'
 
-import Store from '../../store';
-import * as selectors from '../../store/selectors';
-import { setSettings } from '../../store/actions';
+import Store from '../../store'
+import * as selectors from '../../store/selectors'
+import { setSettings } from '../../store/actions'
 
 const Settings = () => {
-  const settings = Store.useState(selectors.selectSettings);
+  const settings = Store.useState(selectors.selectSettings)
   return (
     <IonPage>
       <IonHeader>
@@ -27,11 +27,11 @@ const Settings = () => {
           <IonItem>
             <IonToggle
               checked={settings.enableNotifications}
-              onIonChange={e => {
+              onIonChange={(e) => {
                 setSettings({
                   ...settings,
-                  enableNotifications: e.target.checked,
-                });
+                  enableNotifications: e.target.checked
+                })
               }}
             >
               Enable Notifications
@@ -40,7 +40,7 @@ const Settings = () => {
         </IonList>
       </IonContent>
     </IonPage>
-  );
-};
+  )
+}
 
-export default Settings;
+export default Settings

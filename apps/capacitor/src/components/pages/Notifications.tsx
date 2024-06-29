@@ -9,18 +9,18 @@ import {
   IonList,
   IonItem,
   IonNote,
-  IonLabel,
-} from '@ionic/react';
-import Store from '../../store';
-import { selectNotifications } from '../../store/selectors';
+  IonLabel
+} from '@ionic/react'
+import Store from '../../store'
+import { selectNotifications } from '../../store/selectors'
 
-import { close } from 'ionicons/icons';
-import { type NotificationItem } from '../../mock';
+import { close } from 'ionicons/icons'
+import { type NotificationItem } from '../../mock'
 
 const NotificationItem = ({
-  notification,
+  notification
 }: {
-  notification: NotificationItem;
+  notification: NotificationItem
 }) => (
   <IonItem>
     <IonLabel>{notification.title}</IonLabel>
@@ -29,16 +29,16 @@ const NotificationItem = ({
       <IonIcon icon={close} />
     </IonButton>
   </IonItem>
-);
+)
 
 const Notifications = ({
   open,
-  onDidDismiss,
+  onDidDismiss
 }: {
-  open: boolean;
-  onDidDismiss: () => void;
+  open: boolean
+  onDidDismiss: () => void
 }) => {
-  const notifications = Store.useState(selectNotifications);
+  const notifications = Store.useState(selectNotifications)
 
   return (
     <IonModal isOpen={open} onDidDismiss={onDidDismiss}>
@@ -68,7 +68,7 @@ const Notifications = ({
         </IonList>
       </IonContent>
     </IonModal>
-  );
-};
+  )
+}
 
-export default Notifications;
+export default Notifications

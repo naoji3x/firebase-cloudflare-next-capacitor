@@ -1,18 +1,18 @@
-import { Redirect, Route } from 'react-router-dom';
+import { Redirect, Route } from 'react-router-dom'
 import {
   IonRouterOutlet,
   IonTabs,
   IonTabBar,
   IonTabButton,
   IonIcon,
-  IonLabel,
-} from '@ionic/react';
-import { cog, flash, list } from 'ionicons/icons';
+  IonLabel
+} from '@ionic/react'
+import { cog, flash, list } from 'ionicons/icons'
 
-import Home from './Feed';
-import Lists from './Lists';
-import ListDetail from './ListDetail';
-import Settings from './Settings';
+import Home from './Feed'
+import Lists from './Lists'
+import ListDetail from './ListDetail'
+import Settings from './Settings'
 
 const Tabs = () => {
   return (
@@ -43,7 +43,7 @@ const Tabs = () => {
         </IonTabButton>
       </IonTabBar>
     </IonTabs>
-  );
-};
+  )
+}
 
-export default Tabs;
+export default Tabs

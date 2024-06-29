@@ -28,8 +28,8 @@
     "frontend:storybook": "npm run storybook -w apps/frontend",
     "capacitor:dev": "npm run dev -w apps/capacitor",
     "cloudflare:build": "npm run cloudflare:build -w apps/frontend",
-    "clean:modules": "rm -rf node_modules && rm -rf apps/frontend/node_modules && rm -rf apps/firebase/functions/node_modules && rm -rf apps/firebase/node_modules",
-    "clean": "npm run clean:modules && rm package-lock.json && npm cache clean",
+    "clean:modules": "rm -rf node_modules apps/frontend/node_modules apps/firebase/functions/node_modules apps/firebase/node_modules apps/capacitor/node_modules",
+    "clean": "npm run clean:modules && rm package-lock.json",
     "install:all": "npm i -w apps/firebase/functions -w apps/frontend -w apps/firebase -w apps/capacitor && npm i"
   },
   "engines": {

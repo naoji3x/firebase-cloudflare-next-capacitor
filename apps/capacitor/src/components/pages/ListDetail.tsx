@@ -9,18 +9,18 @@ import {
   IonList,
   IonPage,
   IonTitle,
-  IonToolbar,
-} from '@ionic/react';
-import { useParams } from 'react-router-dom';
+  IonToolbar
+} from '@ionic/react'
+import { useParams } from 'react-router-dom'
 
-import Store from '../../store';
-import * as actions from '../../store/actions';
-import * as selectors from '../../store/selectors';
-import { ListItem, TodoListItem } from '../../mock';
+import Store from '../../store'
+import * as actions from '../../store/actions'
+import * as selectors from '../../store/selectors'
+import { ListItem, TodoListItem } from '../../mock'
 
 type ListDetailParams = {
-  listId: string;
-};
+  listId: string
+}
 
 const ListItems = ({ list }: { list: TodoListItem }) => {
   return (
@@ -29,15 +29,15 @@ const ListItems = ({ list }: { list: TodoListItem }) => {
         <ListItemEntry list={list} item={item} key={key} />
       ))}
     </IonList>
-  );
-};
+  )
+}
 
 const ListItemEntry = ({
   list,
-  item,
+  item
 }: {
-  list: TodoListItem;
-  item: ListItem;
+  list: TodoListItem
+  item: ListItem
 }) => (
   <IonItem onClick={() => actions.setDone(list, item, !item.done)}>
     <IonLabel>{item.name}</IonLabel>
@@ -47,13 +47,13 @@ const ListItemEntry = ({
       slot="end"
     />
   </IonItem>
-);
+)
 
 const ListDetail = () => {
-  const lists = Store.useState(selectors.selectLists);
-  const params = useParams<ListDetailParams>();
-  const { listId } = params;
-  const loadedList = lists.find(l => l.id === listId);
+  const lists = Store.useState(selectors.selectLists)
+  const params = useParams<ListDetailParams>()
+  const { listId } = params
+  const loadedList = lists.find((l) => l.id === listId)
 
   return (
     <IonPage>
@@ -67,7 +67,7 @@ const ListDetail = () => {
       </IonHeader>
       <IonContent>{loadedList && <ListItems list={loadedList} />}</IonContent>
     </IonPage>
-  );
-};
+  )
+}
 
-export default ListDetail;
+export default ListDetail
