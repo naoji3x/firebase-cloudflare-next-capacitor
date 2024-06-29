@@ -35,4 +35,4 @@ tsconfig.tsbuildinfo
 .vercel
 
 # gradle
-.gradle/
+.gradle

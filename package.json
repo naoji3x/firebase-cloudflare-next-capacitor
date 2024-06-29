@@ -26,10 +26,11 @@
     "firebase:emulator": "npm run emulator -w apps/firebase",
     "frontend:dev": "npm run dev -w apps/frontend",
     "frontend:storybook": "npm run storybook -w apps/frontend",
+    "capacitor:dev": "npm run dev -w apps/capacitor",
     "cloudflare:build": "npm run cloudflare:build -w apps/frontend",
     "clean:modules": "rm -rf node_modules && rm -rf apps/frontend/node_modules && rm -rf apps/firebase/functions/node_modules && rm -rf apps/firebase/node_modules",
     "clean": "npm run clean:modules && rm package-lock.json && npm cache clean",
-    "install:all": "npm i -w apps/firebase/functions -w apps/frontend -w apps/firebase && npm i"
+    "install:all": "npm i -w apps/firebase/functions -w apps/frontend -w apps/firebase -w apps/capacitor && npm i"
   },
   "engines": {
     "npm": ">=8.19.4",
@@ -40,7 +41,8 @@
   "workspaces": [
     "apps/frontend",
     "apps/firebase/functions",
-    "apps/firebase"
+    "apps/firebase",
+    "apps/capacitor"
   ],
   "dependencies": {
     "@apps/firebase-functions": "*"

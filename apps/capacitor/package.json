@@ -1,5 +1,5 @@
 {
-  "name": "nextjs-tailwind-ionic-capacitor-starter",
+  "name": "todo-app-capacitor",
   "version": "5.0.0",
   "private": true,
   "engines": {
