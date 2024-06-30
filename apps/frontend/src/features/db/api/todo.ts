@@ -80,11 +80,7 @@ export const updateTodo = async (
   console.log('Document written with ID: ', docRef.id)
 }
 
-export const doneTodo = async (
-  uid: string,
-  id: string,
-  done: boolean = true
-) => {
+export const doneTodo = async (uid: string, id: string, done = true) => {
   const docRef = doc(firestore, collectionName(uid), id)
   await setDoc(docRef, { done }, { merge: true })
   console.log('Document written with ID: ', docRef.id)

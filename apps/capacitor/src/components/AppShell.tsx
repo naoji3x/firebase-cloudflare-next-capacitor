@@ -1,6 +1,6 @@
 'use client'
-import { IonApp, IonRouterOutlet, setupIonicReact } from '@ionic/react'
 import { StatusBar, Style } from '@capacitor/status-bar'
+import { IonApp, IonRouterOutlet, setupIonicReact } from '@ionic/react'
 import { IonReactRouter } from '@ionic/react-router'
 import { Route } from 'react-router-dom'
 
@@ -15,7 +15,9 @@ window
       await StatusBar.setStyle({
         style: status.matches ? Style.Dark : Style.Light
       })
-    } catch {}
+    } catch {
+      console.error('Failed to set status bar style')
+    }
   })
 
 const AppShell = () => {

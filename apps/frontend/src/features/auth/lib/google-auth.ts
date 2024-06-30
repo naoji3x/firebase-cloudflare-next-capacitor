@@ -14,7 +14,7 @@ export const signIn = async () => await signInWith('google')
  * Sign out from the app.
  * @param callbackUrl redirect URL after sign out
  */
-export const signOut = async (callbackUrl: string = '/') => {
+export const signOut = async (callbackUrl = '/') => {
   if (auth.currentUser) {
     await signOutFirebase(auth)
   }

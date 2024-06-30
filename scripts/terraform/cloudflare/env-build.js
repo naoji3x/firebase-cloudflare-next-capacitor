@@ -1,4 +1,5 @@
-require("dotenv").config({ path: "./apps/frontend/.env.development" });
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+require('dotenv').config({ path: './apps/frontend/.env.development' })
 const preview = `
 NEXT_PUBLIC_API_KEY_PREVIEW = "${process.env.NEXT_PUBLIC_API_KEY}"
 NEXT_PUBLIC_AUTH_DOMAIN_PREVIEW = "${process.env.NEXT_PUBLIC_AUTH_DOMAIN}"
@@ -10,9 +11,10 @@ NEXT_PUBLIC_VAPID_KEY_PREVIEW = "${process.env.NEXT_PUBLIC_VAPID_KEY}"
 AUTH_SECRET_PREVIEW = "${process.env.AUTH_SECRET}"
 AUTH_GOOGLE_ID_PREVIEW = "${process.env.AUTH_GOOGLE_ID}"
 AUTH_GOOGLE_SECRET_PREVIEW = "${process.env.AUTH_GOOGLE_SECRET}"
-`;
+`
 
-require("dotenv").config({ path: "./apps/frontend/.env.production" });
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+require('dotenv').config({ path: './apps/frontend/.env.production' })
 const production = `
 NEXT_PUBLIC_API_KEY = "${process.env.NEXT_PUBLIC_API_KEY}"
 NEXT_PUBLIC_AUTH_DOMAIN = "${process.env.NEXT_PUBLIC_AUTH_DOMAIN}"
@@ -24,11 +26,12 @@ NEXT_PUBLIC_VAPID_KEY = "${process.env.NEXT_PUBLIC_VAPID_KEY}"
 AUTH_SECRET = "${process.env.AUTH_SECRET}"
 AUTH_GOOGLE_ID = "${process.env.AUTH_GOOGLE_ID}"
 AUTH_GOOGLE_SECRET = "${process.env.AUTH_GOOGLE_SECRET}"
-`;
+`
 
-const fs = require("fs");
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const fs = require('fs')
 
 fs.writeFileSync(
-  "./scripts/terraform/cloudflare/env.tfvars",
-  preview + production,
-);
+  './scripts/terraform/cloudflare/env.tfvars',
+  preview + production
+)

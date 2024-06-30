@@ -39,8 +39,8 @@ const Card = ({
   onDone
 }: {
   todo: WithId<Todo>
-  onDelete: (id: string) => {}
-  onDone: (id: string, done: boolean) => {}
+  onDelete: (id: string) => void
+  onDone: (id: string, done: boolean) => void
 }) => {
   const [imageUrl, setImageUrl] = useState<string>('')
   useEffect(() => {

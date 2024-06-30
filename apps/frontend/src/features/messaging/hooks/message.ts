@@ -26,20 +26,24 @@ export const useMessage = () => {
       const notification = payload?.notification
       const data = payload?.data
       console.log('[useMessage] Message Received. ', JSON.stringify(payload))
-      setMessage({
-        messageId: payload?.messageId!,
-        receivedAt: new Date(),
-        notification: {
-          title: notification?.title ?? undefined,
-          body: notification?.body ?? undefined
-        },
-        data: {
-          type: data?.type ?? undefined,
-          operation: data?.operation ?? undefined,
-          userId: data?.userId ? Number.parseInt(data?.userId) : undefined,
-          targetId: data?.targetId ? Number.parseInt(data?.targetId) : undefined
-        }
-      })
+      if (payload?.messageId) {
+        setMessage({
+          messageId: payload?.messageId,
+          receivedAt: new Date(),
+          notification: {
+            title: notification?.title ?? undefined,
+            body: notification?.body ?? undefined
+          },
+          data: {
+            type: data?.type ?? undefined,
+            operation: data?.operation ?? undefined,
+            userId: data?.userId ? Number.parseInt(data?.userId) : undefined,
+            targetId: data?.targetId
+              ? Number.parseInt(data?.targetId)
+              : undefined
+          }
+        })
+      }
     })
     return () => {
       unsubscribe() // Unsubscribe from the onMessage event

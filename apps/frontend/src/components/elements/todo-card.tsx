@@ -21,8 +21,12 @@ const TodoCard = ({
   scheduledAt = new Date(),
   imageUrl = '',
   done = false,
-  onDelete = (id: string) => {},
-  onDone = (id: string, done: boolean) => {},
+  onDelete = (id: string) => {
+    console.log('onDelete', id)
+  },
+  onDone = (id: string, done: boolean) => {
+    console.log('onDone', id, done)
+  },
   ...props
 }) => {
   const [checked, setChecked] = useState<boolean>(done)
