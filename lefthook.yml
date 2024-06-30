@@ -9,22 +9,22 @@ pre-commit:
   commands:
     format-frontend:
       root: apps/frontend
-      glob: "*.{js,jsx,ts,tsx,md,mdx,html,css,scss,json,yml}"
+      glob: '*.{js,jsx,ts,tsx,md,mdx,html,css,scss,json,yml}'
       run: npx prettier {staged_files} --write
     lint-frontend:
       root: apps/frontend
       run: npm run lint:fix
     format-functions:
       root: apps/firebase/functions
-      glob: "*.{js,jsx,ts,tsx,md,mdx,html,css,scss,json,yml}"
+      glob: '*.{js,jsx,ts,tsx,md,mdx,html,css,scss,json,yml}'
       run: npx prettier {staged_files} --write
     lint-functions:
       root: apps/firebase/functions
-      glob: "*.{js,jsx,ts,tsx,md,mdx,html,css,scss,json,yml}"
-      run: npx eslint {staged_files} --fix
+      glob: '*.{js,jsx,ts,tsx,md,mdx,html,css,scss,json,yml}'
+      run: npm run lint:fix
 
 # Use this to validate commit messages
 commit-msg:
   commands:
-    "lint commit message":
+    'lint commit message':
       run: npx --no -- commitlint --edit "$1"

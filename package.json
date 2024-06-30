@@ -6,6 +6,7 @@
   "author": "naoji3x <naoji.3x@gmail.com>",
   "license": "MIT",
   "scripts": {
+    "lefthook:refresh": "lefthook uninstall && lefthook install",
     "lint": "(cd apps/frontend && npm run lint)",
     "lint:fix": "(cd apps/frontend && npm run lint:fix)",
     "format": "(cd apps/frontend && npm run format)",
@@ -53,6 +54,6 @@
     "eslint": "8.57.0",
     "eslint-config-prettier": "9.1.0",
     "prettier": "3.2.5",
-    "typescript": "5.4.2"
+    "typescript": "5.5.2"
   }
 }
