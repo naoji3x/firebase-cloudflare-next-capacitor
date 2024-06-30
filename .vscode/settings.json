@@ -8,6 +8,19 @@
     "source.organizeImports": "explicit"
   },
 
+  "eslint.workingDirectories": [
+    "./apps/frontend",
+    "./apps/firebase/functions",
+    "./apps/firebase",
+    "./apps/capacitor"
+  ],
+  "eslint.validate": [
+    "javascript",
+    "javascriptreact",
+    "typescript",
+    "typescriptreact"
+  ],
+
   "[terraform]": {
     "editor.defaultFormatter": "hashicorp.terraform"
   },
